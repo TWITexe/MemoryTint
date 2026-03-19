@@ -1,31 +1,39 @@
 using UnityEngine;
+using Utils;
 
 [RequireComponent(typeof(BrushColorController))]
 public class BrushSurfaceInteraction : MonoBehaviour
 {
-    // Смешивание цветов
+    // РЎРјРµС€РёРІР°РЅРёРµ С†РІРµС‚РѕРІ
     
     private BrushColorController brushColorController;
 
     [SerializeField] LayerMask colorLayer;
     [SerializeField] private float colorCheckRadius = 0.2f;
     [SerializeField] private Transform colorCheck;
-    PaintSurface lastSurface; // прошлая поверхость ( для смены цвета, при переходе на другую поверхность )
+    PaintSurface lastSurface; // РїСЂРѕС€Р»Р°СЏ РїРѕРІРµСЂС…РѕСЃС‚СЊ ( РґР»СЏ СЃРјРµРЅС‹ С†РІРµС‚Р°, РїСЂРё РїРµСЂРµС…РѕРґРµ РЅР° РґСЂСѓРіСѓСЋ РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ )
 
 
     private void Awake()
     {
         brushColorController = GetComponent<BrushColorController>();
+        
+        this.ValidateSerializedFields();
     }
 
     private void Update()
     {
         Collider2D hit = Physics2D.OverlapCircle(colorCheck.position, colorCheckRadius, colorLayer);
-        PaintSurface paintSurface = hit.gameObject.GetComponent<PaintSurface>();        
-        if (hit != null && paintSurface != null && paintSurface != lastSurface)
-        {        
-            brushColorController.ApplyColor(paintSurface.SurfaceColor);
-            lastSurface = paintSurface;
-        }
+
+        if (hit == null) 
+            return;
+        
+        hit.gameObject.TryGetComponent(out PaintSurface paintSurface);
+
+        if (paintSurface == null || paintSurface == lastSurface)
+            return;
+            
+        brushColorController.ApplyColor(paintSurface.SurfaceColor);
+        lastSurface = paintSurface;
     }
 }

@@ -1,43 +1,50 @@
+using System;
 using UnityEngine;
+using Utils;
 
 public class BrushColorController : MonoBehaviour
 {
-    [Header("Нынешний цвет")]
-    [SerializeField] private Color currentColor = Color.white; // текущий цвет кисти
+    [Header("РќС‹РЅРµС€РЅРёР№ С†РІРµС‚")]
+    [SerializeField] private Color currentColor = Color.white; // С‚РµРєСѓС‰РёР№ С†РІРµС‚ РєРёСЃС‚Рё
     public Color CurrentColor => currentColor;
  
-    [SerializeField] private bool hasColor = false; // есть ли у кисти цвет
+    [SerializeField] private bool hasColor = false; // РµСЃС‚СЊ Р»Рё Сѓ РєРёСЃС‚Рё С†РІРµС‚
     public bool HasColor => hasColor;
 
-    [Header("Спрайт рендерер кисти")]
+    [Header("РЎРїСЂР°Р№С‚ СЂРµРЅРґРµСЂРµСЂ РєРёСЃС‚Рё")]
     [SerializeField] private SpriteRenderer brushRenderer;
+
+    private void Awake()
+    {
+        this.ValidateSerializedFields();
+    }
 
     private void Start()
     {
         UpdateVisual();
     }
 
-    public void ApplyColor(Color newColor) // для применения нового цвета
+    public void ApplyColor(Color newColor) // РґР»СЏ РїСЂРёРјРµРЅРµРЅРёСЏ РЅРѕРІРѕРіРѕ С†РІРµС‚Р°
     {
         if (!hasColor)
         {
-            currentColor = newColor; // чисто берём новый цвет
+            currentColor = newColor; // С‡РёСЃС‚Рѕ Р±РµСЂС‘Рј РЅРѕРІС‹Р№ С†РІРµС‚
             hasColor = true;
         }
         else 
         {
-            // если цвет уже есть
-            currentColor = MixColors(currentColor, newColor); // смешиваем старый и новый цвет
+            // РµСЃР»Рё С†РІРµС‚ СѓР¶Рµ РµСЃС‚СЊ
+            currentColor = MixColors(currentColor, newColor); // СЃРјРµС€РёРІР°РµРј СЃС‚Р°СЂС‹Р№ Рё РЅРѕРІС‹Р№ С†РІРµС‚
         }
 
         UpdateVisual();
     }
 
-    private Color MixColors(Color firstColor, Color secondColor) // для смешивания цветов
+    private Color MixColors(Color firstColor, Color secondColor) // РґР»СЏ СЃРјРµС€РёРІР°РЅРёСЏ С†РІРµС‚РѕРІ
     {
-        float r = (firstColor.r + secondColor.r) * 0.5f; // на 2 делим, потому что в rgb максимальное значение 1,
-        float g = (firstColor.g + secondColor.g) * 0.5f; // а при смешивании цветов может получиться число больше 1, 
-        float b = (firstColor.b + secondColor.b) * 0.5f; // поэтому мы всё, что получится делим на 2
+        float r = (firstColor.r + secondColor.r) * 0.5f; // РЅР° 2 РґРµР»РёРј, РїРѕС‚РѕРјСѓ С‡С‚Рѕ РІ rgb РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ 1,
+        float g = (firstColor.g + secondColor.g) * 0.5f; // Р° РїСЂРё СЃРјРµС€РёРІР°РЅРёРё С†РІРµС‚РѕРІ РјРѕР¶РµС‚ РїРѕР»СѓС‡РёС‚СЊСЃСЏ С‡РёСЃР»Рѕ Р±РѕР»СЊС€Рµ 1, 
+        float b = (firstColor.b + secondColor.b) * 0.5f; // РїРѕСЌС‚РѕРјСѓ РјС‹ РІСЃС‘, С‡С‚Рѕ РїРѕР»СѓС‡РёС‚СЃСЏ РґРµР»РёРј РЅР° 2
 
         return new Color(r, g, b, 1f);
     }
