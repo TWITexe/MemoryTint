@@ -10,10 +10,10 @@ public class FadeScreen : MonoBehaviour
     private Image fadeImage; // UI Image для затемнения
 
     [SerializeField]
-    private float defaultDuration = 1f; // Стандартная длительность
+    private float defaultDuration = 1f; // стандартная длительность
 
     [SerializeField]
-    private Color fadeColor = Color.black; // Цвет затемнения 
+    private Color fadeColor = Color.black;
 
     [SerializeField] float timeToFadeStartLevelTransition; // время для Fade вначале уровня
 
