@@ -7,13 +7,13 @@ public class PaintSurface : MonoBehaviour
     private static readonly int GlowColor = Shader.PropertyToID("_GlowColor");
     
     [SerializeField] private Color surfaceColor = Color.white;
+    [SerializeField] private Color glowColor = Color.white;
     [SerializeField] private bool syncGlowColorWithSurface = true;
     
     private SpriteRenderer spriteRenderer;
     private Material material;
 
     public Color SurfaceColor => surfaceColor;
-
     private void Awake()
     {
         if (syncGlowColorWithSurface == false) 
@@ -23,7 +23,7 @@ public class PaintSurface : MonoBehaviour
             
         spriteRenderer = GetComponent<SpriteRenderer>();
         material = spriteRenderer.material;
-        SetGlowColor(surfaceColor);
+        SetGlowColor(glowColor);
     }
 
     public void SetSurfaceColor(Color newColor)

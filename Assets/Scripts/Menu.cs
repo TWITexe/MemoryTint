@@ -12,6 +12,7 @@ public class Menu : MonoBehaviour
     private Button exit;
 
     [SerializeField] int startSceneIndex;
+    [SerializeField] float fadeTimeForStart;
     private void Awake()
     {
         this.ValidateSerializedFields();
@@ -39,6 +40,7 @@ public class Menu : MonoBehaviour
     private void Play()
     {
         SceneManager.LoadScene(startSceneIndex);
+        FadeScreen.instance.FadeOut(fadeTimeForStart);
     }
     
     private void Exit()
