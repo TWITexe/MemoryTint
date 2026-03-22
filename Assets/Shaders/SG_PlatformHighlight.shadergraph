@@ -30,7 +30,11 @@
     ],
     "m_Keywords": [],
     "m_Dropdowns": [],
-    "m_CategoryData": [],
+    "m_CategoryData": [
+        {
+            "m_Id": "c061af177c5749198ad5b7ad91e794df"
+        }
+    ],
     "m_Nodes": [
         {
             "m_Id": "eefbc3637436439285891548893518c3"
@@ -1518,7 +1522,7 @@
     "m_FloatType": 1,
     "m_RangeValues": {
         "x": 0.0,
-        "y": 5.0
+        "y": 10.0
     }
 }
 
@@ -2805,7 +2809,7 @@
     "m_FloatType": 1,
     "m_RangeValues": {
         "x": 0.0,
-        "y": 2.0
+        "y": 5.0
     }
 }
 
@@ -3293,7 +3297,7 @@
     "m_FloatType": 1,
     "m_RangeValues": {
         "x": 0.0,
-        "y": 4.0
+        "y": 15.0
     }
 }
 
@@ -5882,7 +5886,7 @@
     "m_FloatType": 1,
     "m_RangeValues": {
         "x": 0.0,
-        "y": 0.5
+        "y": 2.0
     }
 }
 
@@ -6516,6 +6520,39 @@
     "m_ShaderOutputName": "Sampler",
     "m_StageCapability": 3,
     "m_BareResource": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "c061af177c5749198ad5b7ad91e794df",
+    "m_Name": "",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "024c71a9fd2f47378cffd009f00c99cb"
+        },
+        {
+            "m_Id": "919dc0f083ef4f9e844a48d6704b0542"
+        },
+        {
+            "m_Id": "a63b9ae294e94365a46b35fc1044a2a0"
+        },
+        {
+            "m_Id": "53c50ebcbe9b4adcb3b28b6464989e5f"
+        },
+        {
+            "m_Id": "43b5ccf2e54d4a0c9aebd25befeb01e7"
+        },
+        {
+            "m_Id": "b69e95526e684fd99abd7202a5c10ec9"
+        },
+        {
+            "m_Id": "a86bcc1142614edbaa95a9e286ebf34e"
+        },
+        {
+            "m_Id": "0fc33b0bc6e54528a298f3e2ef276a06"
+        }
+    ]
 }
 
 {

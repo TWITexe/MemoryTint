@@ -54,13 +54,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _GlowAlpha: 0.5
-    - _GlowStrength: 0.45
-    - _OutlineWidthPx: 1.2
-    - _TimeFxAmount: 0.08
-    - _TimeFxSpeed: 1
+    - _GlowAlpha: 0.696
+    - _GlowStrength: 1.42
+    - _OutlineWidthPx: 2.78
+    - _TimeFxAmount: 0.5
+    - _TimeFxSpeed: 5
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _GlowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GlowColor: {r: 0, g: 0.85986894, b: 0.99215686, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
