@@ -340,6 +340,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   surfaceColor: {r: 0.21176471, g: 0.14901961, b: 0.21960784, a: 1}
+  syncGlowColorWithSurface: 1
 --- !u!1 &358086495
 GameObject:
   m_ObjectHideFlags: 0
@@ -950,6 +951,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   surfaceColor: {r: 0.5764706, g: 0.2509804, b: 0.12941177, a: 1}
+  syncGlowColorWithSurface: 1
 --- !u!1 &721807190
 GameObject:
   m_ObjectHideFlags: 0
@@ -2127,6 +2129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   surfaceColor: {r: 0.98039216, g: 0.9411765, b: 0.7019608, a: 1}
+  syncGlowColorWithSurface: 1
 --- !u!1 &1467014797
 GameObject:
   m_ObjectHideFlags: 0
@@ -2395,6 +2398,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   surfaceColor: {r: 0.21176471, g: 0.14901961, b: 0.21960784, a: 1}
+  syncGlowColorWithSurface: 1
 --- !u!1 &1510497473
 GameObject:
   m_ObjectHideFlags: 0
@@ -2625,6 +2629,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   surfaceColor: {r: 0.15541813, g: 0.115744054, b: 0.16037738, a: 1}
+  syncGlowColorWithSurface: 1
 --- !u!1 &1547587292
 GameObject:
   m_ObjectHideFlags: 0
@@ -2931,6 +2936,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   surfaceColor: {r: 0.21293801, g: 0.14938, b: 0.22, a: 1}
+  syncGlowColorWithSurface: 1
 --- !u!1 &1799325242
 GameObject:
   m_ObjectHideFlags: 0

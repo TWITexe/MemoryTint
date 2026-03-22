@@ -26,29 +26,20 @@ public class PlatformMarker : MonoBehaviour
 
         Transform[] allTransforms = platformsRoot.GetComponentsInChildren<Transform>(true);
 
-        for (int i = 0; i < allTransforms.Length; i++)
+        foreach (Transform target in allTransforms)
         {
-            Transform target = allTransforms[i];
             if (target == platformsRoot)
-            {
                 continue;
-            }
 
             SpriteRenderer spriteRenderer = target.GetComponent<SpriteRenderer>();
             if (spriteRenderer == null)
-            {
                 continue;
-            }
 
-            if (groundLayer >= 0)
-            {
+            if (groundLayer >= 0) 
                 target.gameObject.layer = groundLayer;
-            }
 
-            if (platformMaterial != null)
-            {
+            if (platformMaterial != null) 
                 spriteRenderer.sharedMaterial = platformMaterial;
-            }
 
             PaintSurface paintSurface = target.GetComponent<PaintSurface>();
             bool createdNow = false;
