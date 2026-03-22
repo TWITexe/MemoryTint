@@ -5,7 +5,6 @@ public class LevelTransition : MonoBehaviour
 {
     [SerializeField] private Color requiredColor = Color.white; // требуемый цвет для перехода на некст уровень
     [SerializeField] int sceneNumber;
-    [SerializeField] float timeToFadeStartLevelTransition; // время для Fade вначале уровня
     [SerializeField] float timeToFadeNextLevelTransition;  // время для Fade при переходе на новый уровень
     
 
@@ -31,7 +30,7 @@ public class LevelTransition : MonoBehaviour
             Debug.Log("Отлично! Новый уровень)");
 
             if(FadeScreen.instance != null)
-                FadeScreen.instance.FadeIn(timeToFadeStartLevelTransition, () => { SceneManager.LoadScene(sceneNumber); });
+                FadeScreen.instance.FadeIn(timeToFadeNextLevelTransition, () => { SceneManager.LoadScene(sceneNumber); });
         }
     }
 

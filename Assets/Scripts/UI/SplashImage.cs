@@ -14,7 +14,7 @@ public class SplashImage : MonoBehaviour
     {
         if (videoPlayer == null)
         {
-            Debug.LogError("VideoPlayer не назначен!");
+            Debug.LogError("VideoPlayer РЅРµ РЅР°Р·РЅР°С‡РµРЅ!");
             return;
         }
 
@@ -28,13 +28,13 @@ public class SplashImage : MonoBehaviour
         AsyncOperation operation = SceneManager.LoadSceneAsync(nextSceneIndex);
         operation.allowSceneActivation = false;
 
-        // ждём пока видео закончится
+        // Р¶РґС‘Рј РїРѕРєР° РІРёРґРµРѕ Р·Р°РєРѕРЅС‡РёС‚СЃСЏ
         while (!videoFinished)
         {
             yield return null;
         }
 
-        // разрешаем переход
+        // СЂР°Р·СЂРµС€Р°РµРј РїРµСЂРµС…РѕРґ
         operation.allowSceneActivation = true;
     }
 
@@ -44,29 +44,29 @@ public class SplashImage : MonoBehaviour
     }
     private IEnumerator PlayAndLoad()
     {
-        // подготавливаем видео
+        // РїРѕРґРіРѕС‚Р°РІР»РёРІР°РµРј РІРёРґРµРѕ
         videoPlayer.Prepare();
 
-        // ждём готовность
+        // Р¶РґС‘Рј РіРѕС‚РѕРІРЅРѕСЃС‚СЊ
         yield return new WaitUntil(() => videoPlayer.isPrepared);
         videoPlayer.Play();
 
-        // начинаем загрузку сцены
+        // РЅР°С‡РёРЅР°РµРј Р·Р°РіСЂСѓР·РєСѓ СЃС†РµРЅС‹
         AsyncOperation operation = SceneManager.LoadSceneAsync(nextSceneIndex);
         operation.allowSceneActivation = false;
 
-        // ждём окончания видео
+        // Р¶РґС‘Рј РѕРєРѕРЅС‡Р°РЅРёСЏ РІРёРґРµРѕ
         while (!videoFinished)
         {
             yield return null;
         }
 
-        // переход
+        // РїРµСЂРµС…РѕРґ
         operation.allowSceneActivation = true;
     }
     private void OnDestroy()
     {
-        // отписОчка
+        // РѕС‚РїРёСЃРћС‡РєР°
         if (videoPlayer != null)
             videoPlayer.loopPointReached -= OnVideoFinished;
     }

@@ -15,6 +15,8 @@ public class FadeScreen : MonoBehaviour
     [SerializeField]
     private Color fadeColor = Color.black; // Цвет затемнения 
 
+    [SerializeField] float timeToFadeStartLevelTransition; // время для Fade вначале уровня
+
     public static FadeScreen instance { get; private set; }
 
     private void Awake()
@@ -29,6 +31,10 @@ public class FadeScreen : MonoBehaviour
         instance = this;
     }
 
+    private void Start()
+    {
+        FadeOut(timeToFadeStartLevelTransition);
+    }
     /// <summary>
     /// Появление из черного (прозрачный -> черный)
     /// </summary>
