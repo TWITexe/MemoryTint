@@ -3139,6 +3139,7 @@ MonoBehaviour:
   fadeImage: {fileID: 1032915760}
   defaultDuration: 1
   fadeColor: {r: 0, g: 0, b: 0, a: 1}
+  timeToFadeStartLevelTransition: 3
 --- !u!1 &2002906490
 GameObject:
   m_ObjectHideFlags: 0
@@ -3188,7 +3189,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   requiredColor: {r: 0.5254902, g: 0.54901963, b: 0.34117648, a: 1}
   sceneNumber: 1
-  timeToFadeStartLevelTransition: 1
   timeToFadeNextLevelTransition: 1
 --- !u!212 &2002906493
 SpriteRenderer:

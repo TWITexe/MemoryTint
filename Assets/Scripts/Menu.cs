@@ -7,10 +7,11 @@ public class Menu : MonoBehaviour
 {
     [SerializeField]
     private Button play;
-    
+
     [SerializeField]
     private Button exit;
-    
+
+    [SerializeField] int startSceneIndex;
     private void Awake()
     {
         this.ValidateSerializedFields();
@@ -37,7 +38,7 @@ public class Menu : MonoBehaviour
 
     private void Play()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(startSceneIndex);
     }
     
     private void Exit()
