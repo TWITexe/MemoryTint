@@ -8,11 +8,6 @@ public class LevelTransition : MonoBehaviour
     [SerializeField] float timeToFadeNextLevelTransition;  // время для Fade при переходе на новый уровень
     
 
-    private void Start()
-    {
-        if (FadeScreen.instance != null)
-            FadeScreen.instance.FadeOut(timeToFadeNextLevelTransition);
-    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         
