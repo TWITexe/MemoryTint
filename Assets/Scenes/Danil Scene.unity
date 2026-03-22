@@ -295,7 +295,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 2569f76049f2b48dc81dabddc4a9d104, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -339,7 +339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b19846579c1acb4f9e8a86c442ca0be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  surfaceColor: {r: 0.4415095, g: 0.17879312, b: 0, a: 1}
+  surfaceColor: {r: 0.21176471, g: 0.14901961, b: 0.21960784, a: 1}
 --- !u!1 &358086495
 GameObject:
   m_ObjectHideFlags: 0
@@ -905,7 +905,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 2569f76049f2b48dc81dabddc4a9d104, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -949,7 +949,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b19846579c1acb4f9e8a86c442ca0be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  surfaceColor: {r: 0.23137254, g: 0.84201396, b: 1, a: 1}
+  surfaceColor: {r: 0.5764706, g: 0.2509804, b: 0.12941177, a: 1}
 --- !u!1 &721807190
 GameObject:
   m_ObjectHideFlags: 0
@@ -989,7 +989,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 721807190}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
   m_Name: 
@@ -1375,7 +1375,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 910700682}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
   m_Name: 
@@ -1490,7 +1490,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1023505648}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
   m_Name: 
@@ -1547,7 +1547,7 @@ GameObject:
   - component: {fileID: 1032915761}
   - component: {fileID: 1032915760}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Black Foreground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1649,7 +1649,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1126457172}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
   m_Name: 
@@ -1733,7 +1733,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1181602421}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
   m_Name: 
@@ -2082,7 +2082,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 2569f76049f2b48dc81dabddc4a9d104, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2126,7 +2126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b19846579c1acb4f9e8a86c442ca0be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  surfaceColor: {r: 0.98495007, g: 1, b: 0.36037737, a: 1}
+  surfaceColor: {r: 0.98039216, g: 0.9411765, b: 0.7019608, a: 1}
 --- !u!1 &1467014797
 GameObject:
   m_ObjectHideFlags: 0
@@ -2350,7 +2350,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 2569f76049f2b48dc81dabddc4a9d104, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2394,7 +2394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b19846579c1acb4f9e8a86c442ca0be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  surfaceColor: {r: 1, g: 1, b: 1, a: 1}
+  surfaceColor: {r: 0.21176471, g: 0.14901961, b: 0.21960784, a: 1}
 --- !u!1 &1510497473
 GameObject:
   m_ObjectHideFlags: 0
@@ -2580,7 +2580,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 2569f76049f2b48dc81dabddc4a9d104, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2624,7 +2624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b19846579c1acb4f9e8a86c442ca0be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  surfaceColor: {r: 0.4415095, g: 0.17879312, b: 0, a: 1}
+  surfaceColor: {r: 0.15541813, g: 0.115744054, b: 0.16037738, a: 1}
 --- !u!1 &1547587292
 GameObject:
   m_ObjectHideFlags: 0
@@ -2664,7 +2664,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1547587292}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
   m_Name: 
@@ -2886,7 +2886,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 2569f76049f2b48dc81dabddc4a9d104, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2930,7 +2930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b19846579c1acb4f9e8a86c442ca0be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  surfaceColor: {r: 0.4415095, g: 0.17879312, b: 0, a: 1}
+  surfaceColor: {r: 0.21293801, g: 0.14938, b: 0.22, a: 1}
 --- !u!1 &1799325242
 GameObject:
   m_ObjectHideFlags: 0
@@ -3069,7 +3069,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -3182,8 +3182,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   requiredColor: {r: 0.5254902, g: 0.54901963, b: 0.34117648, a: 1}
   sceneNumber: 1
-  timeToFadeStartLevelTransition: 3
-  timeToFadeNextLevelTransition: 3
+  timeToFadeStartLevelTransition: 1
+  timeToFadeNextLevelTransition: 1
 --- !u!212 &2002906493
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3285,6 +3285,53 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.20671415, y: 0.54977703}
   m_EdgeRadius: 0
+--- !u!1 &2147333109
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2147333110}
+  - component: {fileID: 2147333111}
+  m_Layer: 0
+  m_Name: Platform Maker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2147333110
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2147333109}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2147333111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2147333109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af8ce03e72984d918a5587bd8e813049, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  platformsRoot: {fileID: 362561923}
+  platformMaterial: {fileID: 2100000, guid: 2569f76049f2b48dc81dabddc4a9d104, type: 2}
+  syncSurfaceColorWithSprite: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -3295,3 +3342,4 @@ SceneRoots:
   - {fileID: 787143398}
   - {fileID: 777070855}
   - {fileID: 125670697}
+  - {fileID: 2147333110}

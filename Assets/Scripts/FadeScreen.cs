@@ -5,28 +5,32 @@ using System;
 
 public class FadeScreen : MonoBehaviour
 {
-    [Header("Настройки")]
-    [SerializeField] private Image fadeImage;                // UI Image для затемнения
-    [SerializeField] private float defaultDuration = 1f;     // cтандартная длительность
-    [SerializeField] private Color fadeColor = Color.black;  // wвет затемнения 
-    public static FadeScreen instance { get; private set; }
+    [Header("РќР°СЃС‚СЂРѕР№РєРё")]
+    [SerializeField]
+    private Image fadeImage; // UI Image РґР»СЏ Р·Р°С‚РµРјРЅРµРЅРёСЏ
 
+    [SerializeField]
+    private float defaultDuration = 1f; // РЎС‚Р°РЅРґР°СЂС‚РЅР°СЏ РґР»РёС‚РµР»СЊРЅРѕСЃС‚СЊ
+
+    [SerializeField]
+    private Color fadeColor = Color.black; // Р¦РІРµС‚ Р·Р°С‚РµРјРЅРµРЅРёСЏ 
+
+    public static FadeScreen instance { get; private set; }
 
     private void Awake()
     {
         if (instance != null && instance != this)
         {
             Destroy(gameObject);
-            Debug.Log("Удалён лишний Fade");
+            Debug.Log("РЈРґР°Р»С‘РЅ Р»РёС€РЅРёР№ Fade");
             return;
         }
 
         instance = this;
-
     }
 
     /// <summary>
-    /// Появление из черного (прозрачный -> черный)
+    /// РџРѕСЏРІР»РµРЅРёРµ РёР· С‡РµСЂРЅРѕРіРѕ (РїСЂРѕР·СЂР°С‡РЅС‹Р№ -> С‡РµСЂРЅС‹Р№)
     /// </summary>
     public void FadeOut(float? duration = null, Action onComplete = null)
     {
@@ -34,7 +38,7 @@ public class FadeScreen : MonoBehaviour
     }
 
     /// <summary>
-    /// Исчезновение в черное (черный -> прозрачный)
+    /// РСЃС‡РµР·РЅРѕРІРµРЅРёРµ РІ С‡РµСЂРЅРѕРµ (С‡РµСЂРЅС‹Р№ -> РїСЂРѕР·СЂР°С‡РЅС‹Р№)
     /// </summary>
     public void FadeIn(float? duration = null, Action onComplete = null)
     {
@@ -42,7 +46,7 @@ public class FadeScreen : MonoBehaviour
     }
 
     /// <summary>
-    /// Переключение состояния
+    /// РџРµСЂРµРєР»СЋС‡РµРЅРёРµ СЃРѕСЃС‚РѕСЏРЅРёСЏ
     /// </summary>
     public void ToggleFade(float? duration = null, Action onComplete = null)
     {
@@ -56,12 +60,12 @@ public class FadeScreen : MonoBehaviour
     {
         if (fadeImage == null)
         {
-            Debug.LogError("FadeImage не назначен!");
-            onComplete?.Invoke(); // всё равно вызываем callback, даже если ошибка
+            Debug.LogError("FadeImage РЅРµ РЅР°Р·РЅР°С‡РµРЅ!");
+            onComplete?.Invoke(); // РІСЃС‘ СЂР°РІРЅРѕ РІС‹Р·С‹РІР°РµРј callback, РґР°Р¶Рµ РµСЃР»Рё РѕС€РёР±РєР°
             yield break;
         }
 
-        // Включаем raycastTarget во время анимации (опционально)
+        // Р’РєР»СЋС‡Р°РµРј raycastTarget РІРѕ РІСЂРµРјСЏ Р°РЅРёРјР°С†РёРё (РѕРїС†РёРѕРЅР°Р»СЊРЅРѕ)
         fadeImage.raycastTarget = true;
 
         float elapsedTime = 0f;
@@ -74,7 +78,7 @@ public class FadeScreen : MonoBehaviour
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / duration;
 
-            // Плавное изменение альфа-канала
+            // РџР»Р°РІРЅРѕРµ РёР·РјРµРЅРµРЅРёРµ Р°Р»СЊС„Р°-РєР°РЅР°Р»Р°
             float alpha = Mathf.Lerp(startAlpha, targetAlpha, t);
             currentColor.a = alpha;
             fadeImage.color = currentColor;
@@ -82,20 +86,20 @@ public class FadeScreen : MonoBehaviour
             yield return null;
         }
 
-        // Убеждаемся, что достигли целевого значения
+        // РЈР±РµР¶РґР°РµРјСЃСЏ, С‡С‚Рѕ РґРѕСЃС‚РёРіР»Рё С†РµР»РµРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
         currentColor.a = targetAlpha;
         fadeImage.color = currentColor;
 
-        // если полностью прозрачные - выключаем raycastTarget
+        // РµСЃР»Рё РїРѕР»РЅРѕСЃС‚СЊСЋ РїСЂРѕР·СЂР°С‡РЅС‹Рµ - РІС‹РєР»СЋС‡Р°РµРј raycastTarget
         if (targetAlpha == 0f)
             fadeImage.raycastTarget = false;
 
-        // вызываем callback после завершения анимации
+        // РІС‹Р·С‹РІР°РµРј callback РїРѕСЃР»Рµ Р·Р°РІРµСЂС€РµРЅРёСЏ Р°РЅРёРјР°С†РёРё
         onComplete?.Invoke();
     }
 
     /// <summary>
-    /// Мгновенная установка прозрачности
+    /// РњРіРЅРѕРІРµРЅРЅР°СЏ СѓСЃС‚Р°РЅРѕРІРєР° РїСЂРѕР·СЂР°С‡РЅРѕСЃС‚Рё
     /// </summary>
     public void SetAlpha(float alpha)
     {
@@ -109,7 +113,7 @@ public class FadeScreen : MonoBehaviour
     }
 
     /// <summary>
-    /// Зацикленное мигание
+    /// Р—Р°С†РёРєР»РµРЅРЅРѕРµ РјРёРіР°РЅРёРµ
     /// </summary>
     public void StartBlinking(float speed = 1f)
     {

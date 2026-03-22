@@ -3,10 +3,10 @@ using UnityEngine.SceneManagement;
 
 public class LevelTransition : MonoBehaviour
 {
-    [SerializeField] private Color requiredColor = Color.white; // требуемый цвет для перехода на некст уровень
+    [SerializeField] private Color requiredColor = Color.white; // С‚СЂРµР±СѓРµРјС‹Р№ С†РІРµС‚ РґР»СЏ РїРµСЂРµС…РѕРґР° РЅР° РЅРµРєСЃС‚ СѓСЂРѕРІРµРЅСЊ
     [SerializeField] int sceneNumber;
-    [SerializeField] float timeToFadeStartLevelTransition; // время для Fade вначале уровня
-    [SerializeField] float timeToFadeNextLevelTransition;  // время для Fade при переходе на новый уровень
+    [SerializeField] float timeToFadeStartLevelTransition; // РІСЂРµРјСЏ РґР»СЏ Fade РІРЅР°С‡Р°Р»Рµ СѓСЂРѕРІРЅСЏ
+    [SerializeField] float timeToFadeNextLevelTransition;  // РІСЂРµРјСЏ РґР»СЏ Fade РїСЂРё РїРµСЂРµС…РѕРґРµ РЅР° РЅРѕРІС‹Р№ СѓСЂРѕРІРµРЅСЊ
     
 
     private void Start()
@@ -21,14 +21,14 @@ public class LevelTransition : MonoBehaviour
         Debug.Log(collision.gameObject.GetComponent<BrushColorController>());
         if (brushColor == null) return;
 
-        // сравнение двух цветов, если они очень похожи или идентичны - проходит!
+        // СЃСЂР°РІРЅРµРЅРёРµ РґРІСѓС… С†РІРµС‚РѕРІ, РµСЃР»Рё РѕРЅРё РѕС‡РµРЅСЊ РїРѕС…РѕР¶Рё РёР»Рё РёРґРµРЅС‚РёС‡РЅС‹ - РїСЂРѕС…РѕРґРёС‚!
         float difference = Vector3.Distance(
             new Vector3(brushColor.CurrentColor.r, brushColor.CurrentColor.g, brushColor.CurrentColor.b),
             new Vector3(requiredColor.r, requiredColor.g, requiredColor.b));
 
         if (difference < 0.1f)
         {
-            Debug.Log("Отлично! Новый уровень)");
+            Debug.Log("РћС‚Р»РёС‡РЅРѕ! РќРѕРІС‹Р№ СѓСЂРѕРІРµРЅСЊ)");
 
             if(FadeScreen.instance != null)
                 FadeScreen.instance.FadeIn(timeToFadeStartLevelTransition, () => { SceneManager.LoadScene(sceneNumber); });
