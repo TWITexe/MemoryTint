@@ -340,6 +340,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   surfaceColor: {r: 0.21176471, g: 0.14901961, b: 0.21960784, a: 1}
+  glowColor: {r: 0.8415094, g: 0.35776746, b: 0, a: 1}
   syncGlowColorWithSurface: 1
 --- !u!1 &358086495
 GameObject:
@@ -951,6 +952,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   surfaceColor: {r: 0.5764706, g: 0.2509804, b: 0.12941177, a: 1}
+  glowColor: {r: 0.7509433, g: 0.67145663, b: 0.6106727, a: 1}
   syncGlowColorWithSurface: 1
 --- !u!1 &721807190
 GameObject:
@@ -1251,7 +1253,7 @@ Transform:
   m_GameObject: {fileID: 787143393}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.97, y: -0.43, z: 0}
+  m_LocalPosition: {x: 4.23, y: -2.59, z: 0}
   m_LocalScale: {x: 0.29, y: 1.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1335,8 +1337,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df7a3969b4b04943b72e51095506dfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentColor: {r: 1, g: 1, b: 1, a: 1}
-  hasColor: 0
+  currentColor: {r: 0.78039217, g: 0.59607846, b: 0.41568628, a: 1}
+  hasColor: 1
   brushRenderer: {fileID: 1346862595}
 --- !u!1 &910700682
 GameObject:
@@ -2129,6 +2131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   surfaceColor: {r: 0.98039216, g: 0.9411765, b: 0.7019608, a: 1}
+  glowColor: {r: 0.7509433, g: 0.67145663, b: 0.6106727, a: 1}
   syncGlowColorWithSurface: 1
 --- !u!1 &1467014797
 GameObject:
@@ -2373,7 +2376,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_Sprite: {fileID: -3099854500402120817, guid: 3aa52c0c7bd3ca848a2419b0d620333e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2398,6 +2401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   surfaceColor: {r: 0.21176471, g: 0.14901961, b: 0.21960784, a: 1}
+  glowColor: {r: 0.8415094, g: 0.35776746, b: 0, a: 1}
   syncGlowColorWithSurface: 1
 --- !u!1 &1510497473
 GameObject:
@@ -2629,6 +2633,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   surfaceColor: {r: 0.15541813, g: 0.115744054, b: 0.16037738, a: 1}
+  glowColor: {r: 0.8415094, g: 0.35776746, b: 0, a: 1}
   syncGlowColorWithSurface: 1
 --- !u!1 &1547587292
 GameObject:
@@ -2742,8 +2747,8 @@ Transform:
   m_GameObject: {fileID: 1727342047}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.561043, y: -3.9774258, z: -0.044431973}
-  m_LocalScale: {x: 0.95229554, y: 0.95229554, z: 0.95229554}
+  m_LocalPosition: {x: 5.9707, y: -3.9774258, z: -0.044431973}
+  m_LocalScale: {x: 1.3272204, y: 0.95229554, z: 0.95229554}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1181602422}
@@ -2911,7 +2916,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 4
   m_Sprite: {fileID: -6241875750427568822, guid: 3aa52c0c7bd3ca848a2419b0d620333e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2936,6 +2941,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   surfaceColor: {r: 0.21293801, g: 0.14938, b: 0.22, a: 1}
+  glowColor: {r: 0.8415094, g: 0.35776746, b: 0, a: 1}
   syncGlowColorWithSurface: 1
 --- !u!1 &1799325242
 GameObject:
@@ -3035,7 +3041,7 @@ GameObject:
   - component: {fileID: 1995147208}
   - component: {fileID: 1995147212}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Canvas Fade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3139,7 +3145,7 @@ MonoBehaviour:
   fadeImage: {fileID: 1032915760}
   defaultDuration: 1
   fadeColor: {r: 0, g: 0, b: 0, a: 1}
-  timeToFadeStartLevelTransition: 3
+  timeToFadeStartLevelTransition: 2
 --- !u!1 &2002906490
 GameObject:
   m_ObjectHideFlags: 0
@@ -3168,7 +3174,7 @@ Transform:
   m_GameObject: {fileID: 2002906490}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.56, y: -2.5, z: -0.016821023}
+  m_LocalPosition: {x: 6.41, y: -3.12, z: -0.016821023}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3187,9 +3193,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc99e43e8939f624e8b821bef1501b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requiredColor: {r: 0.5254902, g: 0.54901963, b: 0.34117648, a: 1}
+  requiredColor: {r: 0.49411765, g: 0.37254903, b: 0.31764707, a: 1}
   sceneNumber: 1
-  timeToFadeNextLevelTransition: 1
+  timeToFadeNextLevelTransition: 2
 --- !u!212 &2002906493
 SpriteRenderer:
   m_ObjectHideFlags: 0
