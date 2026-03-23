@@ -2,13 +2,17 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 using Utils;
 
 public class SettingsMenu : MonoBehaviour
 {
     [SerializeField]
-    private Slider volumeSlider;
+    private Slider musicVolumeSlider;
+
+    [SerializeField]
+    private Slider sfxVolumeSlider;
 
     [SerializeField]
     private Toggle fullscreenToggle;
@@ -16,16 +20,20 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField]
     private TMP_Dropdown resolutionDropdown;
 
+    [SerializeField]
+    private AudioMixer audioMixer;
+
     private Resolution[] resolutions;
 
-    private const string VolumePrefKey = "Volume";
+    private const string MusicVolumePrefKey = "MusicVolume";
+    private const string SfxVolumePrefKey = "SfxVolume";
     private const string FullscreenPrefKey = "Fullscreen";
     private const string ResolutionPrefKey = "Resolution";
 
     private void Awake()
     {
         this.ValidateSerializedFields();
-        
+
         AddSubscriptions();
     }
 
@@ -37,7 +45,8 @@ public class SettingsMenu : MonoBehaviour
 
     private void AddSubscriptions()
     {
-        volumeSlider.onValueChanged.AddListener(SetVolume);
+        musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
+        sfxVolumeSlider.onValueChanged.AddListener(SetSfxVolume);
         fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
         resolutionDropdown.onValueChanged.AddListener(SetResolution);
     }
@@ -45,7 +54,8 @@ public class SettingsMenu : MonoBehaviour
     private void LoadSettings()
     {
         int currentResIndex = GetCurrentResolutionIndex();
-        float savedVolume = Mathf.Clamp01(PlayerPrefs.GetFloat(VolumePrefKey, 1f));
+        float savedMusicVolume = PlayerPrefs.GetFloat(MusicVolumePrefKey, 0.7f);
+        float savedSfxVolume = PlayerPrefs.GetFloat(SfxVolumePrefKey, 0.7f);
         bool savedFullscreen = PlayerPrefs.GetInt(FullscreenPrefKey, 1) == 1;
         int savedResolution = PlayerPrefs.GetInt(ResolutionPrefKey, currentResIndex);
 
@@ -53,16 +63,18 @@ public class SettingsMenu : MonoBehaviour
             ? Mathf.Clamp(savedResolution, 0, resolutions.Length - 1)
             : 0;
 
-        volumeSlider.SetValueWithoutNotify(savedVolume);
+        musicVolumeSlider.SetValueWithoutNotify(savedMusicVolume);
+        sfxVolumeSlider.SetValueWithoutNotify(savedSfxVolume);
         fullscreenToggle.SetIsOnWithoutNotify(savedFullscreen);
-        
+
         if (resolutions.Length > 0)
         {
             resolutionDropdown.SetValueWithoutNotify(savedResolution);
             resolutionDropdown.RefreshShownValue();
         }
 
-        SetVolume(savedVolume);
+        SetMusicVolume(savedMusicVolume);
+        SetSfxVolume(savedSfxVolume);
         SetFullscreen(savedFullscreen);
         SetResolution(savedResolution);
     }
@@ -75,7 +87,8 @@ public class SettingsMenu : MonoBehaviour
 
     private void RemoveSubscriptions()
     {
-        volumeSlider?.onValueChanged.RemoveListener(SetVolume);
+        musicVolumeSlider?.onValueChanged.RemoveListener(SetMusicVolume);
+        sfxVolumeSlider?.onValueChanged.RemoveListener(SetSfxVolume);
         fullscreenToggle?.onValueChanged.RemoveListener(SetFullscreen);
         resolutionDropdown?.onValueChanged.RemoveListener(SetResolution);
     }
@@ -105,21 +118,22 @@ public class SettingsMenu : MonoBehaviour
         return 0;
     }
 
-    private void SetVolume(float volume)
+    private void SetMusicVolume(float volume)
     {
-        volume = Mathf.Clamp01(volume);
-        AudioListener.volume = volume;
-        PlayerPrefs.SetFloat(VolumePrefKey, volume);
+        ApplyMusicVolume(volume);
+        PlayerPrefs.SetFloat(MusicVolumePrefKey, volume);
+    }
 
-        Debug.Log($"Volume = {volume}");
+    private void SetSfxVolume(float volume)
+    {
+        ApplySfxVolume(volume);
+        PlayerPrefs.SetFloat(SfxVolumePrefKey, volume);
     }
 
     private void SetFullscreen(bool isFullscreen)
     {
         Screen.fullScreen = isFullscreen;
         PlayerPrefs.SetInt(FullscreenPrefKey, isFullscreen ? 1 : 0);
-        
-        Debug.Log($"Fullscreen = {isFullscreen}");
     }
 
     private void SetResolution(int resIndex)
@@ -131,7 +145,30 @@ public class SettingsMenu : MonoBehaviour
         Resolution res = resolutions[resIndex];
         Screen.SetResolution(res.width, res.height, Screen.fullScreen);
         PlayerPrefs.SetInt(ResolutionPrefKey, resIndex);
-        
-        Debug.Log($"Resolution = {res.width}x{res.height}");
+    }
+
+    public void ApplySavedAudioSettings()
+    {
+        float savedMusicVolume = PlayerPrefs.GetFloat(MusicVolumePrefKey, 0.7f);
+        float savedSfxVolume = PlayerPrefs.GetFloat(SfxVolumePrefKey, 0.7f);
+
+        ApplyMusicVolume(savedMusicVolume);
+        ApplySfxVolume(savedSfxVolume);
+    }
+
+    private void ApplyMusicVolume(float volume)
+    {
+        if (volume <= 0.001f)
+            audioMixer.SetFloat("MusicVolume", -80f);
+        else
+            audioMixer.SetFloat("MusicVolume", Mathf.Log10(volume) * 20f);
+    }
+
+    private void ApplySfxVolume(float volume)
+    {
+        if (volume <= 0.001f)
+            audioMixer.SetFloat("SfxVolume", -80f);
+        else
+            audioMixer.SetFloat("SfxVolume", Mathf.Log10(volume) * 20f);
     }
 }

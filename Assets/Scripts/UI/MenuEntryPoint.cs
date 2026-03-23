@@ -17,4 +17,8 @@ public class MenuEntryPoint : MonoBehaviour
         settings.gameObject.SetActive(false);
         settings.InitializeAndLoad();
     }
+    private void Start()
+    {
+        settings.ApplySavedAudioSettings();
+    }
 }
