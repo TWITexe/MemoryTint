@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class PlayerMoveController : MonoBehaviour
 {
@@ -18,8 +18,7 @@ public class PlayerMoveController : MonoBehaviour
     [Tooltip("Включать мобильный режим автоматически на мобильных платформах.")]
     [SerializeField] private bool autoEnableOnMobilePlatform = true;
     [SerializeField] private bool mobileMode = false;
-
-
+    [SerializeField] private Animator anim;
 
     private bool isGrounded;
     private bool jumpPressed;
@@ -29,7 +28,7 @@ public class PlayerMoveController : MonoBehaviour
 
     //private Health playerHealth;
     private Rigidbody2D rb;
-    private Animator anim;
+    
     private float baseGravity;
     private Vector3 baseScale;
 
@@ -44,7 +43,6 @@ public class PlayerMoveController : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
         //playerHealth = GetComponent<Health>();
         baseScale = transform.localScale;
         baseGravity = rb.gravityScale;
