@@ -1453,9 +1453,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0a0836de40d2ff49af5a5a4c46e32e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2.5
+  speed: 2.2
   climbSpeed: 3
-  jumpForce: 4.5
+  jumpForce: 4
   groundCheck: {fileID: 1006727945}
   groundCheckRadius: 0.2
   groundLayer:
@@ -7162,8 +7162,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.021479083, y: -0.3274489}
-  m_Radius: 1.2249429
+  m_Offset: {x: -0.021479066, y: -0.3119527}
+  m_Radius: 1.2404392
 --- !u!114 &1663165760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7463,7 +7463,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1995147208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7592,7 +7592,7 @@ Transform:
   m_GameObject: {fileID: 2002906490}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.36, y: 0.18, z: -0.016821023}
+  m_LocalPosition: {x: 8.21, y: 0.83, z: -0.016821023}
   m_LocalScale: {x: 1.3, y: 1.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
