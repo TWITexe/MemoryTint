@@ -39,8 +39,7 @@ public class Menu : MonoBehaviour
 
     private void Play()
     {
-        SceneManager.LoadScene(startSceneIndex);
-        FadeScreen.instance.FadeOut(fadeTimeForStart);
+        FadeScreen.instance.FadeIn(fadeTimeForStart, () => { SceneManager.LoadScene(startSceneIndex); });
     }
     
     private void Exit()
