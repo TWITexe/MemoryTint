@@ -7562,7 +7562,7 @@ MonoBehaviour:
   fadeImage: {fileID: 1032915760}
   defaultDuration: 1
   fadeColor: {r: 0, g: 0, b: 0, a: 1}
-  timeToFadeStartLevelTransition: 2
+  timeToFadeStartLevelTransition: 3
 --- !u!1 &2002906490
 GameObject:
   m_ObjectHideFlags: 0
