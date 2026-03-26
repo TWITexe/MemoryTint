@@ -1485,7 +1485,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &801569524
 Transform:
   m_ObjectHideFlags: 0
@@ -12515,16 +12515,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4809498258783520467, guid: eace95a04e6d389438bcda42853c9cf1, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8006136076639097145, guid: eace95a04e6d389438bcda42853c9cf1, type: 3}
       propertyPath: m_Resource
       value: 
-      objectReference: {fileID: 8300000, guid: f49cb21734cd6424897ed0dc3c3a320d, type: 3}
+      objectReference: {fileID: 8300000, guid: 9503d92392084054caa99a67761fdaa2, type: 3}
     - target: {fileID: 8006136076639097145, guid: eace95a04e6d389438bcda42853c9cf1, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: f49cb21734cd6424897ed0dc3c3a320d, type: 3}
+      objectReference: {fileID: 8300000, guid: 9503d92392084054caa99a67761fdaa2, type: 3}
     - target: {fileID: 8006136076639097145, guid: eace95a04e6d389438bcda42853c9cf1, type: 3}
       propertyPath: OutputAudioMixerGroup
       value: 
