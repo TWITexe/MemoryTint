@@ -9,6 +9,7 @@ public class PlayerDeathController : MonoBehaviour
     [SerializeField] private PlayerMoveController playerMoveController;
     [SerializeField] private PlayerFadeController playerFadeController;
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private BrushColorController brushColorController;
 
     [Header("UI сообщения")]
     [SerializeField] private CanvasGroup messageCanvasGroup;
@@ -105,6 +106,7 @@ public class PlayerDeathController : MonoBehaviour
     {
         if (respawnPoint != null)
             transform.position = respawnPoint.position;
+        brushColorController?.ClearColor();
     }
 
     private IEnumerator ShowMessageRoutine()
