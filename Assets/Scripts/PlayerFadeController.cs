@@ -6,12 +6,19 @@ public class PlayerFadeController : MonoBehaviour
     [SerializeField] private PlayerMoveController playerMoveController;
     [SerializeField] private SpriteRenderer[] renderers;
     [SerializeField] private float fadePlayerDuration = 2f;
+    [SerializeField] private bool fadeToStart = false;
 
     private Coroutine currentFade;
+
+    
 
     private void Start()
     {
         SetAlpha(0f);
+        if (fadeToStart)
+        {
+            FadeIn(fadePlayerDuration);
+        }
     }
 
     public void FadeIn(float duration = -1f)
