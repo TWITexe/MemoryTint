@@ -48,9 +48,11 @@ public class BackgroundRevealController : MonoBehaviour
     [Header("Final Reveal")]
     [SerializeField]
     private float globalReveal = 0f;
-
     [SerializeField]
-    private float finalRevealDuration = 2.2f;
+    private bool playRevealOnLoad = false;
+    [SerializeField]
+    private float revealDuration = 4f;
+
 
     private readonly Vector4[] revealShapeMeta = new Vector4[MaxRevealShapes];
     private readonly Vector4[] revealVertices = new Vector4[MaxRevealVertices];
@@ -71,6 +73,12 @@ public class BackgroundRevealController : MonoBehaviour
         CollectRevealSources();
     }
 
+    private void Start()
+    {
+        if (playRevealOnLoad)
+            PlayFinalReveal(0, revealDuration);
+    }
+
     private void OnEnable()
     {
         ApplyReveal();
@@ -82,10 +90,10 @@ public class BackgroundRevealController : MonoBehaviour
     }
 
     [ContextMenu("Play Final Reveal")]
-    public void PlayFinalReveal()
+    public void PlayFinalReveal(float _finishRevealValue, float _finalRevealDuration)
     {
         StopAllCoroutines();
-        StartCoroutine(AnimateGlobalReveal(finalRevealDuration));
+        StartCoroutine(AnimateGlobalReveal(_finishRevealValue, _finalRevealDuration));
     }
 
     public void SetGlobalReveal(float value)
@@ -93,7 +101,7 @@ public class BackgroundRevealController : MonoBehaviour
         globalReveal = Mathf.Clamp01(value);
     }
 
-    private IEnumerator AnimateGlobalReveal(float duration)
+    private IEnumerator AnimateGlobalReveal(float targetValue, float duration)
     {
         duration = Mathf.Max(0.01f, duration);
         float startValue = globalReveal;
@@ -103,11 +111,11 @@ public class BackgroundRevealController : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
-            globalReveal = Mathf.Lerp(startValue, 1f, t);
+            globalReveal = Mathf.Lerp(startValue, targetValue, t);
             yield return null;
         }
 
-        globalReveal = 1f;
+        globalReveal = targetValue;
     }
 
     private void CollectRevealSources()
