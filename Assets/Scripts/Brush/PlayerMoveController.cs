@@ -12,6 +12,10 @@ public class PlayerMoveController : MonoBehaviour
     [SerializeField] private float groundCheckRadius = 0.2f;
     [SerializeField] private LayerMask groundLayer;
 
+    [Header("Jump Assist")]
+    [SerializeField] private float coyoteTime = 0.12f;     // сколько можно прыгнуть после схода с платформы
+    [SerializeField] private float jumpBufferTime = 0.12f; // сколько хранить нажатие прыжка
+
     [Header("Mobile UI")]
     [Tooltip("Ссылка на корневой объект мобильного UI (Canvas/Panel). Будет включаться/отключаться.")]
     [SerializeField] private GameObject mobileUIRoot;
@@ -21,16 +25,18 @@ public class PlayerMoveController : MonoBehaviour
     [SerializeField] private Animator anim;
 
     private bool isGrounded;
-    private bool jumpPressed;
     private bool isClimbing;
     private bool moveLocks = false;
     public bool MoveLocks => moveLocks;
 
-    //private Health playerHealth;
     private Rigidbody2D rb;
-    
+
     private float baseGravity;
     private Vector3 baseScale;
+
+    // таймеры для coyote time и jump buffer
+    private float coyoteTimeCounter;
+    private float jumpBufferCounter;
 
     // для ввода
     private float kbHorizontal;
@@ -38,12 +44,11 @@ public class PlayerMoveController : MonoBehaviour
 
     // мобильный ввод
     private bool mLeftHeld, mRightHeld, mUpHeld, mDownHeld;
-    private bool mJumpPressedFrame; // отдельный флаг для кнопки прыжка
+    private bool mJumpPressedFrame;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        //playerHealth = GetComponent<Health>();
         baseScale = transform.localScale;
         baseGravity = rb.gravityScale;
 
@@ -52,14 +57,12 @@ public class PlayerMoveController : MonoBehaviour
         else
             ApplyMobileUIVisibility();
     }
+
     private void Start()
     {
-        moveLocks = true; // включается на true после PlayerFadeController 
-        //if (playerHealth != null)
-        //{
-        //    playerHealth.OnDeath += () => LockMove();
-        //}
+        moveLocks = true;
     }
+
     private void Update()
     {
         if (!mobileMode)
@@ -68,11 +71,10 @@ public class PlayerMoveController : MonoBehaviour
             kbVertical = Input.GetAxisRaw("Vertical");
 
             if (Input.GetKeyDown(KeyCode.Space))
-                jumpPressed = true;
+                jumpBufferCounter = jumpBufferTime;
         }
         else
         {
-            // в мобильном режиме собираем ввод
             int h = 0;
             if (mLeftHeld) h -= 1;
             if (mRightHeld) h += 1;
@@ -86,18 +88,19 @@ public class PlayerMoveController : MonoBehaviour
 
             if (mJumpPressedFrame)
             {
-                jumpPressed = true;
+                jumpBufferCounter = jumpBufferTime;
                 mJumpPressedFrame = false;
             }
         }
+
+        UpdateGroundedState();
+        UpdateJumpTimers();
     }
 
     private void FixedUpdate()
     {
-        Debug.Log("moveLocks = " + moveLocks);
-        if (moveLocks == false)
+        if (!moveLocks)
         {
-
             if (isClimbing)
             {
                 HandleClimbing(kbHorizontal, kbVertical);
@@ -105,11 +108,29 @@ public class PlayerMoveController : MonoBehaviour
             else
             {
                 HandleMovement(kbHorizontal);
-                Jump();
+                HandleJump();
             }
         }
 
         Flip(kbHorizontal);
+    }
+
+    private void UpdateGroundedState()
+    {
+        if (!groundCheck) return;
+
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+    }
+
+    private void UpdateJumpTimers()
+    {
+        if (isGrounded)
+            coyoteTimeCounter = coyoteTime;
+        else
+            coyoteTimeCounter -= Time.deltaTime;
+
+        if (jumpBufferCounter > 0f)
+            jumpBufferCounter -= Time.deltaTime;
     }
 
     private void HandleMovement(float horizontalInput)
@@ -125,14 +146,23 @@ public class PlayerMoveController : MonoBehaviour
     {
         rb.gravityScale = 0f;
         rb.linearVelocity = new Vector2(horizontalInput * speed, verticalInput * climbSpeed);
+    }
 
-        // анимация для лазания (если будет нужна)
-        // if (anim != null) anim.SetFloat("climbSpeed", Mathf.Abs(verticalInput));
+    private void HandleJump()
+    {
+        if (jumpBufferCounter > 0f && coyoteTimeCounter > 0f)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+
+            // сбрасываем, чтобы прыжок не сработал второй раз
+            jumpBufferCounter = 0f;
+            coyoteTimeCounter = 0f;
+        }
     }
 
     private void Flip(float horizontalInput)
     {
-        if (horizontalInput != 0 && moveLocks == false)
+        if (horizontalInput != 0 && !moveLocks)
             transform.localScale = new Vector3(Mathf.Sign(horizontalInput) * baseScale.x, baseScale.y, baseScale.z);
     }
 
@@ -142,28 +172,18 @@ public class PlayerMoveController : MonoBehaviour
         rb.gravityScale = value ? 0f : baseGravity;
     }
 
-    private void Jump()
-    {
-        if (!groundCheck) return;
-
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
-
-        if (jumpPressed && isGrounded)
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-        }
-
-        jumpPressed = false;
-    }
-
     public void LockMove()
     {
         moveLocks = true;
-        anim.SetFloat("speed", 0);
-    }
-        
-        public void UnlockMove() => moveLocks = false;
 
+        if (anim != null)
+            anim.SetFloat("speed", 0);
+    }
+
+    public void UnlockMove()
+    {
+        moveLocks = false;
+    }
 
     // =========================
     //       Для мобилок
@@ -173,6 +193,7 @@ public class PlayerMoveController : MonoBehaviour
     {
         SetMobileMode(!mobileMode);
     }
+
     public void SetMobileMode(bool enabled)
     {
         mobileMode = enabled;
@@ -191,6 +212,7 @@ public class PlayerMoveController : MonoBehaviour
         mLeftHeld = mRightHeld = mUpHeld = mDownHeld = false;
         mJumpPressedFrame = false;
         kbHorizontal = kbVertical = 0f;
+        jumpBufferCounter = 0f;
     }
 
     public void MobileLeftDown() { mLeftHeld = true; }
@@ -203,4 +225,12 @@ public class PlayerMoveController : MonoBehaviour
     public void MobileDownDown() { mDownHeld = true; }
     public void MobileDownUp() { mDownHeld = false; }
     public void MobileJumpPress() { mJumpPressedFrame = true; }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (!groundCheck) return;
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+    }
 }
