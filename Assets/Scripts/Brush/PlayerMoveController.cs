@@ -54,6 +54,7 @@ public class PlayerMoveController : MonoBehaviour
     }
     private void Start()
     {
+        moveLocks = true; // включается на true после PlayerFadeController 
         //if (playerHealth != null)
         //{
         //    playerHealth.OnDeath += () => LockMove();
@@ -155,8 +156,13 @@ public class PlayerMoveController : MonoBehaviour
         jumpPressed = false;
     }
 
-    public void LockMove() => moveLocks = true;
-    public void UnlockMove() => moveLocks = false;
+    public void LockMove()
+    {
+        moveLocks = true;
+        anim.SetFloat("speed", 0);
+    }
+        
+        public void UnlockMove() => moveLocks = false;
 
 
     // =========================
