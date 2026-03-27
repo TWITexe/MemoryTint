@@ -20,12 +20,12 @@ public class LevelTransition : MonoBehaviour
         this.ValidateSerializedFields();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (isTransitioning)
             return;
 
-        if (!collision.gameObject.TryGetComponent(out BrushColorController brushColor))
+        if (!collision.TryGetComponent(out BrushColorController brushColor))
             return;
 
         // сравнение двух цветов, если они очень похожи или идентичны - проходит!
@@ -37,23 +37,32 @@ public class LevelTransition : MonoBehaviour
 
         if (differenceSqr < 0.01f)
         {
-            Debug.Log("Отлично! Новый уровень)");
-            isTransitioning = true;
+            PlayerFadeController fade = collision.gameObject.GetComponent<PlayerFadeController>();
+            if (fade != null)
+            {
+                fade.FadeOut(() =>
+                {
+                    collision.GetComponent<PlayerMoveController>().LockMove();
+                    Debug.Log("Отлично! Новый уровень)");
+                    isTransitioning = true;
 
-            if (playRevealBeforeLoad && backgroundReveal != null)
-            {
-                StartCoroutine(RevealThenLoad());
-            }
-            else
-            {
-                LoadNextScene();
+                    if (playRevealBeforeLoad && backgroundReveal != null)
+                    {
+                        StartCoroutine(RevealThenLoad());
+                    }
+                    else
+                    {
+                        LoadNextScene();
+                    }
+                });
             }
         }
     }
-
     private IEnumerator RevealThenLoad()
     {
-        backgroundReveal.PlayFinalReveal();
+        // тут поменял метод, первый параметр - к чему стреимится альфа, второй - время за которое всё проиходит
+        backgroundReveal.PlayFinalReveal(0, revealDurationBeforeLoad); 
+
         yield return new WaitForSeconds(Mathf.Max(0f, revealDurationBeforeLoad));
         LoadNextScene();
     }
