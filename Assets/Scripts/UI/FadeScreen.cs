@@ -1,77 +1,130 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
 
 public class FadeScreen : MonoBehaviour
 {
-    [Header("Настройки")]
-    [SerializeField]
-    private Image fadeImage; // UI Image для затемнения
-
-    [SerializeField]
-    private float defaultDuration = 1f; // стандартная длительность
-
-    [SerializeField]
-    private Color fadeColor = Color.black;
+    [Header("Settings")]
+    [SerializeField] private Image fadeImage;
+    [SerializeField] private float defaultDuration = 1f;
+    [SerializeField] private Color fadeColor = Color.black;
 
     [SerializeField] float timeToFadeStartLevelTransition; // время для Fade вначале уровня
-
     public static FadeScreen instance { get; private set; }
 
+    private Coroutine currentFadeRoutine;
+    private Coroutine blinkRoutine;
+
+    [SerializeField] private bool fadeToStart = true;
     private void Awake()
     {
         if (instance != null && instance != this)
         {
             Destroy(gameObject);
-            Debug.Log("Удалён лишний Fade");
+            Debug.Log("Удалён лишний FadeScreen");
             return;
         }
 
         instance = this;
     }
 
-    private void Start()
-    {
-        FadeOut(timeToFadeStartLevelTransition);
+    private void Start() 
+    { 
+        if (fadeToStart)
+            FadeOut(timeToFadeStartLevelTransition); 
     }
     /// <summary>
-    /// Появление из черного (прозрачный -> черный)
+    /// Открыть экран: из чёрного в прозрачный.
     /// </summary>
+
     public void FadeOut(float? duration = null, Action onComplete = null)
     {
-        StartCoroutine(FadeRoutine(1f, 0f, duration ?? defaultDuration, onComplete));
+        StartNewFade(1f, 0f, duration ?? defaultDuration, onComplete);
     }
 
     /// <summary>
-    /// Исчезновение в черное (черный -> прозрачный)
+    /// Закрыть экран: из прозрачного в чёрный.
     /// </summary>
     public void FadeIn(float? duration = null, Action onComplete = null)
     {
-        StartCoroutine(FadeRoutine(0f, 1f, duration ?? defaultDuration, onComplete));
+        StartNewFade(0f, 1f, duration ?? defaultDuration, onComplete);
     }
 
     /// <summary>
-    /// Переключение состояния
+    /// Переключить состояние.
     /// </summary>
     public void ToggleFade(float? duration = null, Action onComplete = null)
-    {
-        if (fadeImage.color.a > 0.5f)
-            FadeIn(duration, onComplete);
-        else
-            FadeOut(duration, onComplete);
-    }
-
-    private IEnumerator FadeRoutine(float startAlpha, float targetAlpha, float duration, Action onComplete = null)
     {
         if (fadeImage == null)
         {
             Debug.LogError("FadeImage не назначен!");
-            onComplete?.Invoke(); // всё равно вызываем callback, даже если ошибка
-            yield break;
+            onComplete?.Invoke();
+            return;
         }
 
-        // Включаем raycastTarget во время анимации (опционально)
+        if (fadeImage.color.a > 0.5f)
+            FadeOut(duration, onComplete);
+        else
+            FadeIn(duration, onComplete);
+    }
+
+    /// <summary>
+    /// Мгновенно установить альфу затемнения.
+    /// 0 = прозрачный, 1 = полностью чёрный.
+    /// </summary>
+    public void SetAlpha(float alpha)
+    {
+        if (fadeImage == null)
+        {
+            Debug.LogError("FadeImage не назначен!");
+            return;
+        }
+
+        Color color = fadeColor;
+        color.a = Mathf.Clamp01(alpha);
+        fadeImage.color = color;
+        fadeImage.raycastTarget = alpha > 0f;
+    }
+
+    /// <summary>
+    /// Запустить мигание.
+    /// </summary>
+    public void StartBlinking(float speed = 1f)
+    {
+        StopBlinking();
+        blinkRoutine = StartCoroutine(BlinkRoutine(speed));
+    }
+
+    /// <summary>
+    /// Остановить мигание.
+    /// </summary>
+    public void StopBlinking()
+    {
+        if (blinkRoutine != null)
+        {
+            StopCoroutine(blinkRoutine);
+            blinkRoutine = null;
+        }
+    }
+
+    private void StartNewFade(float startAlpha, float targetAlpha, float duration, Action onComplete = null)
+    {
+        if (fadeImage == null)
+        {
+            Debug.LogError("FadeImage не назначен!");
+            onComplete?.Invoke();
+            return;
+        }
+
+        if (currentFadeRoutine != null)
+            StopCoroutine(currentFadeRoutine);
+
+        currentFadeRoutine = StartCoroutine(FadeRoutine(startAlpha, targetAlpha, duration, onComplete));
+    }
+
+    private IEnumerator FadeRoutine(float startAlpha, float targetAlpha, float duration, Action onComplete = null)
+    {
         fadeImage.raycastTarget = true;
 
         float elapsedTime = 0f;
@@ -82,48 +135,22 @@ public class FadeScreen : MonoBehaviour
         while (elapsedTime < duration)
         {
             elapsedTime += Time.deltaTime;
-            float t = elapsedTime / duration;
+            float t = duration > 0f ? Mathf.Clamp01(elapsedTime / duration) : 1f;
 
-            // Плавное изменение альфа-канала
-            float alpha = Mathf.Lerp(startAlpha, targetAlpha, t);
-            currentColor.a = alpha;
+            currentColor.a = Mathf.Lerp(startAlpha, targetAlpha, t);
             fadeImage.color = currentColor;
 
             yield return null;
         }
 
-        // Убеждаемся, что достигли целевого значения
         currentColor.a = targetAlpha;
         fadeImage.color = currentColor;
 
-        // если полностью прозрачные - выключаем raycastTarget
-        if (targetAlpha == 0f)
+        if (Mathf.Approximately(targetAlpha, 0f))
             fadeImage.raycastTarget = false;
 
-        // вызываем callback после завершения анимации
+        currentFadeRoutine = null;
         onComplete?.Invoke();
-    }
-
-    /// <summary>
-    /// Мгновенная установка прозрачности
-    /// </summary>
-    public void SetAlpha(float alpha)
-    {
-        if (fadeImage != null)
-        {
-            Color color = fadeImage.color;
-            color.a = Mathf.Clamp01(alpha);
-            fadeImage.color = color;
-            fadeImage.raycastTarget = alpha > 0f;
-        }
-    }
-
-    /// <summary>
-    /// Зацикленное мигание
-    /// </summary>
-    public void StartBlinking(float speed = 1f)
-    {
-        StartCoroutine(BlinkRoutine(speed));
     }
 
     private IEnumerator BlinkRoutine(float speed)
