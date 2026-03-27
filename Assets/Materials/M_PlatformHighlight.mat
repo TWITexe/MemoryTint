@@ -56,11 +56,11 @@ Material:
     m_Floats:
     - _GlowAlpha: 1
     - _GlowStrength: 2
-    - _OutlineWidthPx: 1.2
+    - _OutlineWidthPx: 1.95
     - _TimeFxAmount: 0.5
-    - _TimeFxSpeed: 5
+    - _TimeFxSpeed: 2.55
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _GlowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GlowColor: {r: 1, g: 0.5943396, b: 0.5943396, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
