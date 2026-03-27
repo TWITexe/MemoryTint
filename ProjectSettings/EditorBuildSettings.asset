@@ -13,8 +13,8 @@ EditorBuildSettings:
     guid: ae5a8fab3c5404ddaa677261b3f815e4
   - enabled: 1
     path: Assets/Scenes/LVL1 Pasha.unity
-    guid: 8c7647fd82a773645a2e179208e75e4d
-  - enabled: 1
+    guid: 65bd4c4564ac34143ac8d7c649e9fc40
+  - enabled: 0
     path: Assets/Scenes/Danil Scene.unity
     guid: 830a4c137c5804bdfa83858327bdaca8
   m_configObjects:
