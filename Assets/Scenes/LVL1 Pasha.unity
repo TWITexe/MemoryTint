@@ -2362,8 +2362,8 @@ MonoBehaviour:
   pulseSpeed: 1.8
   pulseAmplitude: 0.75
   globalReveal: 3
-  playRevealOnLoad: 0
-  revealDuration: 4
+  playRevealOnLoad: 1
+  revealDuration: 2
 --- !u!1 &1006727944
 GameObject:
   m_ObjectHideFlags: 0
@@ -3586,7 +3586,11 @@ PrefabInstance:
       objectReference: {fileID: 946346893}
     - target: {fileID: 1215006586300866346, guid: b04bd97a443edaf4680cd1e1e5835602, type: 3}
       propertyPath: playRevealBeforeLoad
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1215006586300866346, guid: b04bd97a443edaf4680cd1e1e5835602, type: 3}
+      propertyPath: revealDurationBeforeLoad
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1215006586300866346, guid: b04bd97a443edaf4680cd1e1e5835602, type: 3}
       propertyPath: timeToFadeNextLevelTransition

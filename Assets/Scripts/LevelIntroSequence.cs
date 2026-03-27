@@ -75,9 +75,6 @@ public class LevelIntroSequence : MonoBehaviour
 
         yield return new WaitForSeconds(delayBeforeSceneOpen);
 
-        if (backgroundRevealController != null)
-            backgroundRevealController.PlayFinalReveal(0, 4f);
-
         yield return new WaitForSeconds(delayBeforePlayerFade);
 
         if (playerFadeController != null)

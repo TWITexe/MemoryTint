@@ -37,10 +37,10 @@ public class LevelTransition : MonoBehaviour
 
         if (differenceSqr < 0.01f)
         {
-            PlayerFadeController fade = collision.gameObject.GetComponent<PlayerFadeController>();
-            if (fade != null)
+            PlayerFadeController playerFade = collision.gameObject.GetComponent<PlayerFadeController>();
+            if (playerFade != null)
             {
-                fade.FadeOut(() =>
+                playerFade.FadeOut(() =>
                 {
                     collision.GetComponent<PlayerMoveController>().LockMove();
                     Debug.Log("Отлично! Новый уровень)");
@@ -61,9 +61,9 @@ public class LevelTransition : MonoBehaviour
     private IEnumerator RevealThenLoad()
     {
         // тут поменял метод, первый параметр - к чему стреимится альфа, второй - время за которое всё проиходит
-        backgroundReveal.PlayFinalReveal(0, revealDurationBeforeLoad); 
+        backgroundReveal.PlayFinalReveal(1, revealDurationBeforeLoad); 
 
-        yield return new WaitForSeconds(Mathf.Max(0f, revealDurationBeforeLoad));
+        yield return new WaitForSeconds(Mathf.Max(0f, revealDurationBeforeLoad*2));
         LoadNextScene();
     }
 
