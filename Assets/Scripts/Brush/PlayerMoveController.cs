@@ -26,6 +26,11 @@ public class PlayerMoveController : MonoBehaviour
     [Header("Animation")]
     [SerializeField] private Animator anim;
 
+    // это тут быть не должно, но времени уже нет :))0)
+    [Header("Sound")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip jumpAudioClip;
+
     private bool isGrounded;
     private bool wasGrounded;
     private bool isClimbing;
@@ -160,6 +165,7 @@ public class PlayerMoveController : MonoBehaviour
     {
         if (jumpBufferCounter > 0f && coyoteTimeCounter > 0f)
         {
+            audioSource.PlayOneShot(jumpAudioClip);
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
 
             if (anim != null)
