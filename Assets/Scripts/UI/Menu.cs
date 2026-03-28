@@ -11,12 +11,15 @@ public class Menu : MonoBehaviour
     [SerializeField]
     private Button exit;
 
-    [SerializeField] int startSceneIndex;
-    [SerializeField] float fadeTimeForStart;
+    [SerializeField]
+    private int startSceneIndex;
+
+    [SerializeField]
+    private float fadeTimeForStart;
+
     private void Awake()
     {
         this.ValidateSerializedFields();
-        
         AddSubscriptions();
     }
 
@@ -30,7 +33,7 @@ public class Menu : MonoBehaviour
         play.onClick.AddListener(Play);
         exit.onClick.AddListener(Exit);
     }
-    
+
     private void RemoveSubscriptions()
     {
         play.onClick.RemoveListener(Play);
@@ -41,7 +44,7 @@ public class Menu : MonoBehaviour
     {
         FadeScreen.instance.FadeIn(fadeTimeForStart, () => { SceneManager.LoadScene(startSceneIndex); });
     }
-    
+
     private void Exit()
     {
         Application.Quit();
