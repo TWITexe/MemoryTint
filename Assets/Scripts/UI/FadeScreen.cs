@@ -66,11 +66,11 @@ public class FadeScreen : MonoBehaviour
     /// Закрыть экран: из прозрачного в чёрный.
     /// При необходимости приглушить звук.
     /// </summary>
-    public void FadeIn(float? duration = null, Action onComplete = null)
+    public void FadeIn(float? duration = null, Action onComplete = null, bool fadeAudio = true)
     {
         float fadeDuration = duration ?? defaultDuration;
 
-        if (fadeAudioOnFadeIn)
+        if (fadeAudioOnFadeIn && fadeAudio)
             StartAudioFadeDown(fadeDuration);
 
         StartNewFade(0f, 1f, fadeDuration, onComplete);
