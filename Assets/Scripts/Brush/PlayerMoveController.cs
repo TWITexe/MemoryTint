@@ -13,8 +13,8 @@ public class PlayerMoveController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
 
     [Header("Jump Assist")]
-    [SerializeField] private float coyoteTime = 0.12f;     // сколько можно прыгнуть после схода с платформы
-    [SerializeField] private float jumpBufferTime = 0.12f; // сколько хранить нажатие прыжка
+    [SerializeField] private float coyoteTime = 0.12f;
+    [SerializeField] private float jumpBufferTime = 0.12f;
 
     [Header("Mobile UI")]
     [Tooltip("Ссылка на корневой объект мобильного UI (Canvas/Panel). Будет включаться/отключаться.")]
@@ -22,9 +22,12 @@ public class PlayerMoveController : MonoBehaviour
     [Tooltip("Включать мобильный режим автоматически на мобильных платформах.")]
     [SerializeField] private bool autoEnableOnMobilePlatform = true;
     [SerializeField] private bool mobileMode = false;
+
+    [Header("Animation")]
     [SerializeField] private Animator anim;
 
     private bool isGrounded;
+    private bool wasGrounded;
     private bool isClimbing;
     private bool moveLocks = false;
     public bool MoveLocks => moveLocks;
@@ -34,17 +37,20 @@ public class PlayerMoveController : MonoBehaviour
     private float baseGravity;
     private Vector3 baseScale;
 
-    // таймеры для coyote time и jump buffer
     private float coyoteTimeCounter;
     private float jumpBufferCounter;
 
-    // для ввода
     private float kbHorizontal;
     private float kbVertical;
 
-    // мобильный ввод
     private bool mLeftHeld, mRightHeld, mUpHeld, mDownHeld;
     private bool mJumpPressedFrame;
+
+    private static readonly int SpeedHash = Animator.StringToHash("speed");
+    private static readonly int IsGroundedHash = Animator.StringToHash("isGrounded");
+    private static readonly int VerticalSpeedHash = Animator.StringToHash("verticalSpeed");
+    private static readonly int IsClimbingHash = Animator.StringToHash("isClimbing");
+    private static readonly int JumpHash = Animator.StringToHash("jump");
 
     private void Awake()
     {
@@ -95,6 +101,7 @@ public class PlayerMoveController : MonoBehaviour
 
         UpdateGroundedState();
         UpdateJumpTimers();
+        UpdateAnimatorParameters();
     }
 
     private void FixedUpdate()
@@ -119,6 +126,7 @@ public class PlayerMoveController : MonoBehaviour
     {
         if (!groundCheck) return;
 
+        wasGrounded = isGrounded;
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
     }
 
@@ -139,7 +147,7 @@ public class PlayerMoveController : MonoBehaviour
         rb.linearVelocity = movement;
 
         if (anim != null)
-            anim.SetFloat("speed", Mathf.Abs(movement.x));
+            anim.SetFloat(SpeedHash, Mathf.Abs(movement.x));
     }
 
     private void HandleClimbing(float horizontalInput, float verticalInput)
@@ -154,10 +162,24 @@ public class PlayerMoveController : MonoBehaviour
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
 
-            // сбрасываем, чтобы прыжок не сработал второй раз
+            if (anim != null)
+                anim.SetTrigger(JumpHash);
+
             jumpBufferCounter = 0f;
             coyoteTimeCounter = 0f;
         }
+    }
+
+    private void UpdateAnimatorParameters()
+    {
+        if (anim == null) return;
+
+        anim.SetBool(IsGroundedHash, isGrounded);
+        anim.SetFloat(VerticalSpeedHash, rb.linearVelocity.y);
+        anim.SetBool(IsClimbingHash, isClimbing);
+
+        if (moveLocks)
+            anim.SetFloat(SpeedHash, 0f);
     }
 
     private void Flip(float horizontalInput)
@@ -175,19 +197,16 @@ public class PlayerMoveController : MonoBehaviour
     public void LockMove()
     {
         moveLocks = true;
+        rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
 
         if (anim != null)
-            anim.SetFloat("speed", 0);
+            anim.SetFloat(SpeedHash, 0f);
     }
 
     public void UnlockMove()
     {
         moveLocks = false;
     }
-
-    // =========================
-    //       Для мобилок
-    // =========================
 
     public void ToggleMobileMode()
     {

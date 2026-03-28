@@ -62,7 +62,7 @@ public class PlayerDeathController : MonoBehaviour
 
         if (FadeScreen.instance != null)
         {
-            FadeScreen.instance.FadeIn(fadeToBlackDuration, () => fadeFinished = true);
+            FadeScreen.instance.FadeIn(fadeToBlackDuration, () => fadeFinished = true, fadeAudio: false);
             yield return new WaitUntil(() => fadeFinished);
         }
 
@@ -82,6 +82,7 @@ public class PlayerDeathController : MonoBehaviour
         yield return StartCoroutine(HideMessageRoutine());
 
         Respawn();
+
         bool screenFadeFinished = false;
 
         if (FadeScreen.instance != null)

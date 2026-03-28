@@ -26,6 +26,8 @@ public class BrushColorController : MonoBehaviour
 
     public void ApplyColor(Color newColor) // для применения нового цвета
     {
+        Debug.Log($"ApplyColor вызван. Новый цвет: {newColor}");
+
         if (!hasColor)
         {
             currentColor = newColor; // чисто берём новый цвет
@@ -62,5 +64,7 @@ public class BrushColorController : MonoBehaviour
         hasColor = false; 
         currentColor = Color.white; 
         UpdateVisual();
+
+        Debug.Log($"ClearColor вызван. currentColor = {currentColor}, hasColor = {hasColor}");
     }
 }
