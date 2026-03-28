@@ -1331,8 +1331,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 22.15
+  m_fontSizeBase: 22.15
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1956,7 +1956,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 0.23
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -7338,7 +7338,15 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1629513016757491738, guid: eb491b4ef73b6b74588bb02ac0cec74f, type: 3}
+      propertyPath: audioMixer
+      value: 
+      objectReference: {fileID: 24100000, guid: b60dbdc0b0fcafb409ed229aa50d3a99, type: 2}
+    - target: {fileID: 1629513016757491738, guid: eb491b4ef73b6b74588bb02ac0cec74f, type: 3}
       propertyPath: fadeColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629513016757491738, guid: eb491b4ef73b6b74588bb02ac0cec74f, type: 3}
+      propertyPath: fadeToStart
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1629513016757491738, guid: eb491b4ef73b6b74588bb02ac0cec74f, type: 3}
