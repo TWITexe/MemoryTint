@@ -2358,7 +2358,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1.5
   climbSpeed: 3
-  jumpForce: 4.5
+  jumpForce: 4.7
   groundCheck: {fileID: 1006727945}
   groundCheckRadius: 0.2
   groundLayer:
@@ -10912,6 +10912,15 @@ MonoBehaviour:
   backgroundReveal: {fileID: 946346893}
   playRevealBeforeLoad: 1
   revealDurationBeforeLoad: 3
+  lastLevel: 0
+  whiteFadeDuration: 1.2
+  whiteScreenHoldDuration: 4
+  blackFadeDuration: 1.2
+  fadeAudioOnFinalBlackFade: 0
+  finalAudioSource: {fileID: 0}
+  finalClip1: {fileID: 0}
+  finalClip2: {fileID: 0}
+  extraDelayAfterFinalSounds: 0.2
   pulseTarget: {fileID: 3856936072223894130}
   pulseScaleAmount: 0.15
   pulseSpeed: 3
