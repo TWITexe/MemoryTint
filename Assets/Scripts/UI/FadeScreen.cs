@@ -53,27 +53,35 @@ public class FadeScreen : MonoBehaviour
     }
 
     /// <summary>
-    /// Открыть экран: из чёрного в прозрачный.
-    /// Звук не трогаем.
+    /// Открыть экран: из текущего цвета в прозрачный.
     /// </summary>
     public void FadeOut(float? duration = null, Action onComplete = null)
     {
+        FadeOut(fadeColor, duration, onComplete);
+    }
+
+    public void FadeOut(Color color, float? duration = null, Action onComplete = null)
+    {
         float fadeDuration = duration ?? defaultDuration;
-        StartNewFade(1f, 0f, fadeDuration, onComplete);
+        StartNewFade(1f, 0f, fadeDuration, color, onComplete);
     }
 
     /// <summary>
-    /// Закрыть экран: из прозрачного в чёрный.
-    /// При необходимости приглушить звук.
+    /// Закрыть экран: из прозрачного в указанный цвет.
     /// </summary>
     public void FadeIn(float? duration = null, Action onComplete = null, bool fadeAudio = true)
+    {
+        FadeIn(fadeColor, duration, onComplete, fadeAudio);
+    }
+
+    public void FadeIn(Color color, float? duration = null, Action onComplete = null, bool fadeAudio = true)
     {
         float fadeDuration = duration ?? defaultDuration;
 
         if (fadeAudioOnFadeIn && fadeAudio)
             StartAudioFadeDown(fadeDuration);
 
-        StartNewFade(0f, 1f, fadeDuration, onComplete);
+        StartNewFade(0f, 1f, fadeDuration, color, onComplete);
     }
 
     public void ToggleFade(float? duration = null, Action onComplete = null)
@@ -93,13 +101,17 @@ public class FadeScreen : MonoBehaviour
 
     public void SetAlpha(float alpha)
     {
+        SetAlpha(alpha, fadeColor);
+    }
+
+    public void SetAlpha(float alpha, Color color)
+    {
         if (fadeImage == null)
         {
             Debug.LogError("FadeImage не назначен!");
             return;
         }
 
-        Color color = fadeColor;
         color.a = Mathf.Clamp01(alpha);
         fadeImage.color = color;
         fadeImage.raycastTarget = alpha > 0f;
@@ -120,7 +132,7 @@ public class FadeScreen : MonoBehaviour
         }
     }
 
-    private void StartNewFade(float startAlpha, float targetAlpha, float duration, Action onComplete = null)
+    private void StartNewFade(float startAlpha, float targetAlpha, float duration, Color color, Action onComplete = null)
     {
         if (fadeImage == null)
         {
@@ -132,15 +144,15 @@ public class FadeScreen : MonoBehaviour
         if (currentFadeRoutine != null)
             StopCoroutine(currentFadeRoutine);
 
-        currentFadeRoutine = StartCoroutine(FadeRoutine(startAlpha, targetAlpha, duration, onComplete));
+        currentFadeRoutine = StartCoroutine(FadeRoutine(startAlpha, targetAlpha, duration, color, onComplete));
     }
 
-    private IEnumerator FadeRoutine(float startAlpha, float targetAlpha, float duration, Action onComplete = null)
+    private IEnumerator FadeRoutine(float startAlpha, float targetAlpha, float duration, Color color, Action onComplete = null)
     {
         fadeImage.raycastTarget = true;
 
         float elapsedTime = 0f;
-        Color currentColor = fadeColor;
+        Color currentColor = color;
         currentColor.a = startAlpha;
         fadeImage.color = currentColor;
 
@@ -169,8 +181,8 @@ public class FadeScreen : MonoBehaviour
     {
         while (true)
         {
-            yield return FadeRoutine(0f, 1f, speed);
-            yield return FadeRoutine(1f, 0f, speed);
+            yield return FadeRoutine(0f, 1f, speed, fadeColor);
+            yield return FadeRoutine(1f, 0f, speed, fadeColor);
         }
     }
 
@@ -227,6 +239,49 @@ public class FadeScreen : MonoBehaviour
         hasStoredMasterVolume = false;
     }
 
+    public void FadeColor(Color fromColor, Color toColor, float? duration = null, Action onComplete = null, bool fadeAudio = false)
+    {
+        float fadeDuration = duration ?? defaultDuration;
+
+        if (fadeAudioOnFadeIn && fadeAudio)
+            StartAudioFadeDown(fadeDuration);
+
+        if (currentFadeRoutine != null)
+            StopCoroutine(currentFadeRoutine);
+
+        currentFadeRoutine = StartCoroutine(FadeColorRoutine(fromColor, toColor, fadeDuration, onComplete));
+    }
+
+    private IEnumerator FadeColorRoutine(Color fromColor, Color toColor, float duration, Action onComplete = null)
+    {
+        if (fadeImage == null)
+        {
+            Debug.LogError("FadeImage не назначен!");
+            onComplete?.Invoke();
+            yield break;
+        }
+
+        fadeImage.raycastTarget = true;
+
+        fromColor.a = 1f;
+        toColor.a = 1f;
+        fadeImage.color = fromColor;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = duration > 0f ? Mathf.Clamp01(elapsedTime / duration) : 1f;
+
+            fadeImage.color = Color.Lerp(fromColor, toColor, t);
+            yield return null;
+        }
+
+        fadeImage.color = toColor;
+        currentFadeRoutine = null;
+        onComplete?.Invoke();
+    }
     private void OnDestroy()
     {
         if (instance == this)

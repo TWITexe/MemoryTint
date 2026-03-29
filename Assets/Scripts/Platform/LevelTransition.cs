@@ -14,8 +14,21 @@ public class LevelTransition : MonoBehaviour
     [SerializeField] private bool playRevealBeforeLoad = true;
     [SerializeField] private float revealDurationBeforeLoad = 1.8f;
 
+    [Header("Last Level")]
+    [SerializeField] private bool lastLevel = false;
+    [SerializeField] private float whiteFadeDuration = 1.2f;
+    [SerializeField] private float whiteScreenHoldDuration = 4f;
+    [SerializeField] private float blackFadeDuration = 1.2f;
+    [SerializeField] private bool fadeAudioOnFinalBlackFade = false;
+
+    [Header("Last Level Sounds")]
+    [SerializeField] private AudioSource finalAudioSource;
+    [SerializeField] private AudioClip finalClip1;
+    [SerializeField] private AudioClip finalClip2;
+    [SerializeField] private float extraDelayAfterFinalSounds = 0.2f;
+
     [Header("Hint Pulse")]
-    [SerializeField] private Transform pulseTarget; // что именно пульсирует (дверь / спрайт двери)
+    [SerializeField] private Transform pulseTarget;
     [SerializeField] private float pulseScaleAmount = 0.08f;
     [SerializeField] private float pulseSpeed = 3f;
     [SerializeField] private float colorToleranceSqr = 0.01f;
@@ -30,7 +43,6 @@ public class LevelTransition : MonoBehaviour
 
     [Header("Timer")]
     [SerializeField] private LevelTimerController levelTimerController;
-
 
     private void Awake()
     {
@@ -64,7 +76,7 @@ public class LevelTransition : MonoBehaviour
                 audioSource.PlayOneShot(colorCompleteAudioClip);
                 colorCompleteAudioClip = null;
             }
-            
+
             float pulse = 1f + Mathf.Sin(Time.time * pulseSpeed) * pulseScaleAmount;
             pulseTarget.localScale = baseScale * pulse;
         }
@@ -93,28 +105,43 @@ public class LevelTransition : MonoBehaviour
         {
             isTransitioning = true;
 
-            if(levelTimerController != null)
+            if (levelTimerController != null)
                 levelTimerController.StopTimer();
 
             playerFade.FadeOut(() =>
             {
-                collision.GetComponent<PlayerMoveController>().LockMove();
+                PlayerMoveController moveController = collision.GetComponent<PlayerMoveController>();
+                if (moveController != null)
+                    moveController.LockMove();
+
                 Debug.Log("Отлично! Новый уровень)");
-                
                 ResetPulse();
 
-                if (playRevealBeforeLoad && backgroundReveal != null)
+                if (lastLevel)
                 {
-                    StartCoroutine(RevealThenLoad());
+                    if (playRevealBeforeLoad && backgroundReveal != null)
+                        StartCoroutine(RevealThenLastLevelSequence());
+                    else
+                        StartCoroutine(LastLevelSequence());
                 }
                 else
                 {
-                    LoadNextScene();
+                    if (playRevealBeforeLoad && backgroundReveal != null)
+                        StartCoroutine(RevealThenLoad());
+                    else
+                        LoadNextScene();
                 }
             });
         }
     }
 
+    private IEnumerator RevealThenLastLevelSequence()
+    {
+        backgroundReveal.PlayFinalReveal(1, revealDurationBeforeLoad);
+
+        yield return new WaitForSeconds(Mathf.Max(0f, revealDurationBeforeLoad * 2));
+        yield return StartCoroutine(LastLevelSequence());
+    }
     private bool IsColorMatch(Color current, Color target)
     {
         Vector3 colorDiff = new Vector3(
@@ -142,6 +169,63 @@ public class LevelTransition : MonoBehaviour
 
         yield return new WaitForSeconds(Mathf.Max(0f, revealDurationBeforeLoad * 2));
         LoadNextScene();
+    }
+
+    private IEnumerator LastLevelSequence()
+    {
+        if (FadeScreen.instance == null)
+        {
+            Debug.LogWarning("FadeScreen.instance не найден, загружаю сцену сразу.");
+            SceneManager.LoadScene(sceneNumber);
+            yield break;
+        }
+
+        bool whiteFadeCompleted = false;
+
+        FadeScreen.instance.FadeIn(
+            Color.white,
+            whiteFadeDuration,
+            () => whiteFadeCompleted = true,
+            false
+        );
+
+        yield return new WaitUntil(() => whiteFadeCompleted);
+
+        yield return new WaitForSeconds(whiteScreenHoldDuration);
+
+        float longestClipLength = 0f;
+
+        if (finalAudioSource != null)
+        {
+            if (finalClip1 != null)
+            {
+                finalAudioSource.PlayOneShot(finalClip1);
+                longestClipLength = Mathf.Max(longestClipLength, finalClip1.length);
+            }
+
+            if (finalClip2 != null)
+            {
+                finalAudioSource.PlayOneShot(finalClip2);
+                longestClipLength = Mathf.Max(longestClipLength, finalClip2.length);
+            }
+        }
+
+        if (longestClipLength > 0f)
+            yield return new WaitForSeconds(longestClipLength + extraDelayAfterFinalSounds);
+
+        bool colorFadeCompleted = false;
+
+        FadeScreen.instance.FadeColor(
+            Color.white,
+            Color.black,
+            blackFadeDuration,
+            () => colorFadeCompleted = true,
+            true
+        );
+
+        yield return new WaitUntil(() => colorFadeCompleted);
+
+        SceneManager.LoadScene(sceneNumber);
     }
 
     private void LoadNextScene()
