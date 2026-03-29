@@ -10545,7 +10545,7 @@ MonoBehaviour:
   finalAudioSource: {fileID: 4365784819317643950}
   finalClip1: {fileID: 8300000, guid: 3b1df89245a87e94287fa3c4704d675e, type: 3}
   finalClip2: {fileID: 8300000, guid: ee7977c91f95f984684affd4d5d4cd19, type: 3}
-  extraDelayAfterFinalSounds: 3.5
+  extraDelayAfterFinalSounds: 1.5
   pulseTarget: {fileID: 3856936072223894130}
   pulseScaleAmount: 0.15
   pulseSpeed: 3
