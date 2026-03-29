@@ -46,7 +46,7 @@ public class LevelTransition : MonoBehaviour
 
     private void Awake()
     {
-        this.ValidateSerializedFields();
+        this.ValidateSerializedFields(false);
 
         if (pulseTarget == null)
             pulseTarget = transform;

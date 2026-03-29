@@ -24,6 +24,8 @@ public class SettingsMenu : MonoBehaviour
     private AudioMixer audioMixer;
 
     private Resolution[] resolutions;
+    private bool subscriptionsAdded;
+    private bool initialized;
 
     private const string MusicVolumePrefKey = "MusicVolume";
     private const string SfxVolumePrefKey = "SfxVolume";
@@ -33,14 +35,27 @@ public class SettingsMenu : MonoBehaviour
     private void Awake()
     {
         this.ValidateSerializedFields();
-
-        AddSubscriptions();
+        EnsureSubscriptions();
     }
 
     public void InitializeAndLoad()
     {
+        if (initialized)
+            return;
+
+        EnsureSubscriptions();
         InitializeResolutions();
         LoadSettings();
+        initialized = true;
+    }
+
+    private void EnsureSubscriptions()
+    {
+        if (subscriptionsAdded)
+            return;
+
+        AddSubscriptions();
+        subscriptionsAdded = true;
     }
 
     private void AddSubscriptions()
@@ -54,8 +69,8 @@ public class SettingsMenu : MonoBehaviour
     private void LoadSettings()
     {
         int currentResIndex = GetCurrentResolutionIndex();
-        float savedMusicVolume = PlayerPrefs.GetFloat(MusicVolumePrefKey, 0.7f);
-        float savedSfxVolume = PlayerPrefs.GetFloat(SfxVolumePrefKey, 0.7f);
+        float savedMusicVolume = NormalizeSavedVolume(PlayerPrefs.GetFloat(MusicVolumePrefKey, 0.7f));
+        float savedSfxVolume = NormalizeSavedVolume(PlayerPrefs.GetFloat(SfxVolumePrefKey, 0.7f));
         bool savedFullscreen = PlayerPrefs.GetInt(FullscreenPrefKey, 1) == 1;
         int savedResolution = PlayerPrefs.GetInt(ResolutionPrefKey, currentResIndex);
 
@@ -81,7 +96,9 @@ public class SettingsMenu : MonoBehaviour
 
     private void OnDestroy()
     {
-        RemoveSubscriptions();
+        if (subscriptionsAdded)
+            RemoveSubscriptions();
+
         PlayerPrefs.Save();
     }
 
@@ -120,12 +137,14 @@ public class SettingsMenu : MonoBehaviour
 
     private void SetMusicVolume(float volume)
     {
+        volume = Mathf.Clamp01(volume);
         ApplyMusicVolume(volume);
         PlayerPrefs.SetFloat(MusicVolumePrefKey, volume);
     }
 
     private void SetSfxVolume(float volume)
     {
+        volume = Mathf.Clamp01(volume);
         ApplySfxVolume(volume);
         PlayerPrefs.SetFloat(SfxVolumePrefKey, volume);
     }
@@ -149,8 +168,8 @@ public class SettingsMenu : MonoBehaviour
 
     public void ApplySavedAudioSettings()
     {
-        float savedMusicVolume = PlayerPrefs.GetFloat(MusicVolumePrefKey, 0.7f);
-        float savedSfxVolume = PlayerPrefs.GetFloat(SfxVolumePrefKey, 0.7f);
+        float savedMusicVolume = NormalizeSavedVolume(PlayerPrefs.GetFloat(MusicVolumePrefKey, 0.7f));
+        float savedSfxVolume = NormalizeSavedVolume(PlayerPrefs.GetFloat(SfxVolumePrefKey, 0.7f));
 
         ApplyMusicVolume(savedMusicVolume);
         ApplySfxVolume(savedSfxVolume);
@@ -170,5 +189,20 @@ public class SettingsMenu : MonoBehaviour
             audioMixer.SetFloat("SfxVolume", -80f);
         else
             audioMixer.SetFloat("SfxVolume", Mathf.Log10(volume) * 20f);
+    }
+
+    private static float NormalizeSavedVolume(float value)
+    {
+        if (value > 1f)
+        {
+            if (value <= 2f)
+                value = 1f;
+            else if (value <= 10f)
+                value *= 0.1f;
+            else
+                value *= 0.01f;
+        }
+
+        return Mathf.Clamp01(value);
     }
 }
