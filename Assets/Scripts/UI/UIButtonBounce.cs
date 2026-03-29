@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 
 public class UIButtonBounce : MonoBehaviour,    
     IPointerEnterHandler,
