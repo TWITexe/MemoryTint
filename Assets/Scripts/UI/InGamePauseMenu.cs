@@ -38,6 +38,7 @@ namespace UI
         private SettingsMenu settingsMenu;
 
         private bool isPaused;
+        public bool IsPaused => isPaused;
         private void Awake()
         {
             if (pauseMenuContent == null)

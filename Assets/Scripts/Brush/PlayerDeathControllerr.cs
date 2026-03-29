@@ -10,6 +10,7 @@ public class PlayerDeathController : MonoBehaviour
     [SerializeField] private PlayerFadeController playerFadeController;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private BrushColorController brushColorController;
+    [SerializeField] private UI.InGamePauseMenu pauseMenu;
 
     [Header("UI сообщения")]
     [SerializeField] private CanvasGroup messageCanvasGroup;
@@ -21,8 +22,13 @@ public class PlayerDeathController : MonoBehaviour
     [SerializeField] private float messageFadeDuration = 0.5f;
     [SerializeField] private float messageDuration = 3f;
 
+    [Header("Рестарт по кнопке")]
+    [SerializeField] private bool allowRestartByKey = true;
+    [SerializeField] private KeyCode restartKey = KeyCode.R;
+
     [Header("Таймер игрока ( если есть )")]
     [SerializeField] private LevelTimerController levelTimerController;
+
 
 
     [TextArea]
@@ -34,11 +40,21 @@ public class PlayerDeathController : MonoBehaviour
         "Не сегодня!",
         "Не сдавайся, прошу!",
         "Ещё не конец!"
-        
     };
 
     private bool isDying;
     private Coroutine deathRoutine;
+
+    private void Update()
+    {
+        if (!CanRestartByKey())
+            return;
+
+        if (Input.GetKeyDown(restartKey))
+        {
+            RestartWithoutMessage();
+        }
+    }
 
     public void Die()
     {
@@ -46,11 +62,19 @@ public class PlayerDeathController : MonoBehaviour
             return;
 
         levelTimerController?.StopTimer();
-
-        deathRoutine = StartCoroutine(DeathRoutine());
+        deathRoutine = StartCoroutine(DeathRoutine(showMessage: true));
     }
 
-    private IEnumerator DeathRoutine()
+    public void RestartWithoutMessage()
+    {
+        if (isDying)
+            return;
+
+        levelTimerController?.StopTimer();
+        deathRoutine = StartCoroutine(DeathRoutine(showMessage: false));
+    }
+
+    private IEnumerator DeathRoutine(bool showMessage)
     {
         isDying = true;
 
@@ -71,20 +95,27 @@ public class PlayerDeathController : MonoBehaviour
             yield return new WaitUntil(() => fadeFinished);
         }
 
-        yield return StartCoroutine(ShowMessageRoutine());
-
-        float timer = 0f;
-        while (timer < messageDuration)
+        if (showMessage)
         {
-            timer += Time.deltaTime;
+            yield return StartCoroutine(ShowMessageRoutine());
 
-            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
-                break;
+            float timer = 0f;
+            while (timer < messageDuration)
+            {
+                timer += Time.deltaTime;
 
-            yield return null;
+                if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
+                    break;
+
+                yield return null;
+            }
+
+            yield return StartCoroutine(HideMessageRoutine());
         }
-
-        yield return StartCoroutine(HideMessageRoutine());
+        else
+        {
+            HideMessageImmediate();
+        }
 
         Respawn();
 
@@ -122,7 +153,6 @@ public class PlayerDeathController : MonoBehaviour
         if (messageCanvasGroup == null || messageText == null)
             yield break;
 
-        // текст
         if (deathMessages == null || deathMessages.Length == 0)
             messageText.text = "Кажется, ещё рано...";
         else
@@ -131,7 +161,6 @@ public class PlayerDeathController : MonoBehaviour
         messageCanvasGroup.interactable = false;
         messageCanvasGroup.blocksRaycasts = false;
 
-        // Плавное появление
         yield return StartCoroutine(FadeCanvasGroup(messageCanvasGroup, 0f, 1f, messageFadeDuration));
     }
 
@@ -145,6 +174,30 @@ public class PlayerDeathController : MonoBehaviour
         messageCanvasGroup.blocksRaycasts = false;
     }
 
+    private IEnumerator HideMessageRoutine()
+    {
+        if (messageCanvasGroup == null)
+            yield break;
+
+        yield return StartCoroutine(FadeCanvasGroup(messageCanvasGroup, 1f, 0f, messageFadeDuration));
+    }
+
+    private bool CanRestartByKey()
+    {
+        if (!allowRestartByKey || isDying)
+            return false;
+
+        if (pauseMenu != null && pauseMenu.IsPaused)
+            return false;
+
+        if (playerFadeController != null && playerFadeController.IsFading)
+            return false;
+
+        if (FadeScreen.instance != null && FadeScreen.instance.IsFading)
+            return false;
+
+        return true;
+    }
     private IEnumerator FadeCanvasGroup(CanvasGroup cg, float from, float to, float duration)
     {
         float time = 0f;
@@ -158,13 +211,5 @@ public class PlayerDeathController : MonoBehaviour
         }
 
         cg.alpha = to;
-    }
-
-    private IEnumerator HideMessageRoutine()
-    {
-        if (messageCanvasGroup == null)
-            yield break;
-
-        yield return StartCoroutine(FadeCanvasGroup(messageCanvasGroup, 1f, 0f, messageFadeDuration));
     }
 }

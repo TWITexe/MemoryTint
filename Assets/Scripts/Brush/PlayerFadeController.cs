@@ -8,13 +8,14 @@ public class PlayerFadeController : MonoBehaviour
     [SerializeField] private float fadePlayerDuration = 2f;
     [SerializeField] private bool fadeToStart = false;
 
-    private Coroutine currentFade;
+    public bool IsFading { get; private set; }
 
-    
+    private Coroutine currentFade;
 
     private void Start()
     {
         SetAlpha(0f);
+
         if (fadeToStart)
         {
             FadeIn(fadePlayerDuration);
@@ -35,6 +36,13 @@ public class PlayerFadeController : MonoBehaviour
 
     public void SetVisibleImmediate(float alpha)
     {
+        if (currentFade != null)
+        {
+            StopCoroutine(currentFade);
+            currentFade = null;
+        }
+
+        IsFading = false;
         SetAlpha(alpha);
     }
 
@@ -48,6 +56,7 @@ public class PlayerFadeController : MonoBehaviour
 
     private IEnumerator FadeRoutine(float from, float to, float duration, bool unlockAfter, System.Action onComplete)
     {
+        IsFading = true;
         playerMoveController?.LockMove();
 
         float time = 0f;
@@ -55,7 +64,7 @@ public class PlayerFadeController : MonoBehaviour
         while (time < duration)
         {
             time += Time.deltaTime;
-            float t = Mathf.Clamp01(time / duration);
+            float t = duration > 0f ? Mathf.Clamp01(time / duration) : 1f;
             float alpha = Mathf.Lerp(from, to, t);
             SetAlpha(alpha);
             yield return null;
@@ -66,6 +75,8 @@ public class PlayerFadeController : MonoBehaviour
         if (unlockAfter)
             playerMoveController?.UnlockMove();
 
+        IsFading = false;
+        currentFade = null;
         onComplete?.Invoke();
     }
 
@@ -73,7 +84,8 @@ public class PlayerFadeController : MonoBehaviour
     {
         foreach (var r in renderers)
         {
-            if (r == null) continue;
+            if (r == null)
+                continue;
 
             Color c = r.color;
             c.a = alpha;

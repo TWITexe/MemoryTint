@@ -29,6 +29,8 @@ public class FadeScreen : MonoBehaviour
     private static float storedMasterVolumeDb;
     private static bool hasStoredMasterVolume;
 
+    public bool IsFading { get; private set; }
+
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -130,6 +132,9 @@ public class FadeScreen : MonoBehaviour
             StopCoroutine(blinkRoutine);
             blinkRoutine = null;
         }
+
+        if (currentFadeRoutine == null)
+            IsFading = false;
     }
 
     private void StartNewFade(float startAlpha, float targetAlpha, float duration, Color color, Action onComplete = null)
@@ -141,14 +146,21 @@ public class FadeScreen : MonoBehaviour
             return;
         }
 
+        StopBlinking();
+
         if (currentFadeRoutine != null)
+        {
             StopCoroutine(currentFadeRoutine);
+            currentFadeRoutine = null;
+            IsFading = false;
+        }
 
         currentFadeRoutine = StartCoroutine(FadeRoutine(startAlpha, targetAlpha, duration, color, onComplete));
     }
 
     private IEnumerator FadeRoutine(float startAlpha, float targetAlpha, float duration, Color color, Action onComplete = null)
     {
+        IsFading = true;
         fadeImage.raycastTarget = true;
 
         float elapsedTime = 0f;
@@ -174,11 +186,14 @@ public class FadeScreen : MonoBehaviour
             fadeImage.raycastTarget = false;
 
         currentFadeRoutine = null;
+        IsFading = false;
         onComplete?.Invoke();
     }
 
     private IEnumerator BlinkRoutine(float speed)
     {
+        IsFading = true;
+
         while (true)
         {
             yield return FadeRoutine(0f, 1f, speed, fadeColor);
@@ -246,8 +261,14 @@ public class FadeScreen : MonoBehaviour
         if (fadeAudioOnFadeIn && fadeAudio)
             StartAudioFadeDown(fadeDuration);
 
+        StopBlinking();
+
         if (currentFadeRoutine != null)
+        {
             StopCoroutine(currentFadeRoutine);
+            currentFadeRoutine = null;
+            IsFading = false;
+        }
 
         currentFadeRoutine = StartCoroutine(FadeColorRoutine(fromColor, toColor, fadeDuration, onComplete));
     }
@@ -261,6 +282,7 @@ public class FadeScreen : MonoBehaviour
             yield break;
         }
 
+        IsFading = true;
         fadeImage.raycastTarget = true;
 
         fromColor.a = 1f;
@@ -280,8 +302,10 @@ public class FadeScreen : MonoBehaviour
 
         fadeImage.color = toColor;
         currentFadeRoutine = null;
+        IsFading = false;
         onComplete?.Invoke();
     }
+
     private void OnDestroy()
     {
         if (instance == this)
