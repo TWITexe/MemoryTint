@@ -21,6 +21,8 @@ public class PlayerDeathController : MonoBehaviour
     [SerializeField] private float messageFadeDuration = 0.5f;
     [SerializeField] private float messageDuration = 3f;
 
+    [Header("Таймер игрока ( если есть )")]
+    [SerializeField] private LevelTimerController levelTimerController;
 
 
     [TextArea]
@@ -30,6 +32,7 @@ public class PlayerDeathController : MonoBehaviour
         "Кажется, ещё рано...",
         "Я знаю, ты сможешь!!",
         "Не сегодня!",
+        "Не сдавайся, прошу!",
         "Ещё не конец!"
         
     };
@@ -41,6 +44,8 @@ public class PlayerDeathController : MonoBehaviour
     {
         if (isDying)
             return;
+
+        levelTimerController?.StopTimer();
 
         deathRoutine = StartCoroutine(DeathRoutine());
     }
@@ -107,7 +112,9 @@ public class PlayerDeathController : MonoBehaviour
     {
         if (respawnPoint != null)
             transform.position = respawnPoint.position;
+
         brushColorController?.ClearColor();
+        levelTimerController?.ResetTimer(true);
     }
 
     private IEnumerator ShowMessageRoutine()

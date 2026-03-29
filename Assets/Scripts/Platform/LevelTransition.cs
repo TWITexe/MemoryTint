@@ -28,6 +28,9 @@ public class LevelTransition : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip colorCompleteAudioClip;
 
+    [Header("Timer")]
+    [SerializeField] private LevelTimerController levelTimerController;
+
 
     private void Awake()
     {
@@ -89,6 +92,10 @@ public class LevelTransition : MonoBehaviour
         if (playerFade != null)
         {
             isTransitioning = true;
+
+            if(levelTimerController != null)
+                levelTimerController.StopTimer();
+
             playerFade.FadeOut(() =>
             {
                 collision.GetComponent<PlayerMoveController>().LockMove();
