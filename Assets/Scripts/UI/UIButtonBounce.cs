@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.EventSystems;
@@ -8,6 +9,8 @@ public class UIButtonBounce : MonoBehaviour,
     IPointerDownHandler,
     IPointerUpHandler
 {
+    private static AudioMixerGroup cachedSfxMixerGroup;
+
     private Vector3 originalScale;
 
     [Header("Scale Settings")]
@@ -22,6 +25,7 @@ public class UIButtonBounce : MonoBehaviour,
     [SerializeField] private float minPitch = 0.9f;   // Минимальный питч
     [SerializeField] private float maxPitch = 1.1f;   // Максимальный питч
     [SerializeField] private bool randomizePitch = true; // Включить рандомизацию питча
+    [SerializeField] private AudioMixerGroup fallbackSfxMixerGroup;
 
     private Vector3 targetScale;
 
@@ -30,20 +34,16 @@ public class UIButtonBounce : MonoBehaviour,
         originalScale = transform.localScale;
         targetScale = originalScale;
 
-        if (audioSource == null)
-        {
-            audioSource = GetComponent<AudioSource>();
-            if (audioSource == null)
-            {
-                audioSource = gameObject.AddComponent<AudioSource>();
-                audioSource.playOnAwake = false;
-                audioSource.spatialBlend = 0f; // 2D звук
-            }
-        }
+        audioSource = ResolveButtonAudioSource();
+
+        AudioMixerGroup resolvedMixerGroup = ResolveMixerGroup();
+
+        if (resolvedMixerGroup != null)
+            audioSource.outputAudioMixerGroup = resolvedMixerGroup;
     }
     private void Update()
     {
-        transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * speed);
+        transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.unscaledDeltaTime * speed);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -106,5 +106,76 @@ public class UIButtonBounce : MonoBehaviour,
     {
         transform.localScale = originalScale;
         targetScale = originalScale;
+    }
+
+    private AudioMixerGroup ResolveMixerGroup()
+    {
+        if (fallbackSfxMixerGroup != null)
+            return fallbackSfxMixerGroup;
+
+        if (cachedSfxMixerGroup != null)
+            return cachedSfxMixerGroup;
+
+        if (IsSfxGroup(audioSource?.outputAudioMixerGroup))
+        {
+            cachedSfxMixerGroup = audioSource.outputAudioMixerGroup;
+            return cachedSfxMixerGroup;
+        }
+
+        AudioSource[] allSources = FindObjectsByType<AudioSource>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        AudioMixerGroup firstAvailableGroup = null;
+
+        for (int i = 0; i < allSources.Length; i++)
+        {
+            AudioMixerGroup group = allSources[i].outputAudioMixerGroup;
+
+            if (group == null)
+                continue;
+
+            if (firstAvailableGroup == null)
+                firstAvailableGroup = group;
+
+            if (IsSfxGroup(group))
+            {
+                cachedSfxMixerGroup = group;
+                return group;
+            }
+        }
+
+        AudioMixerGroup[] allMixerGroups = Resources.FindObjectsOfTypeAll<AudioMixerGroup>();
+
+        for (int i = 0; i < allMixerGroups.Length; i++)
+        {
+            AudioMixerGroup group = allMixerGroups[i];
+
+            if (IsSfxGroup(group))
+            {
+                cachedSfxMixerGroup = group;
+                return group;
+            }
+        }
+
+        return firstAvailableGroup;
+    }
+
+    private AudioSource ResolveButtonAudioSource()
+    {
+        AudioSource source = audioSource;
+
+        if (source == null || source.gameObject != gameObject)
+            source = GetComponent<AudioSource>();
+
+        if (source == null)
+            source = gameObject.AddComponent<AudioSource>();
+
+        source.playOnAwake = false;
+        source.loop = false;
+        source.spatialBlend = 0f;
+        return source;
+    }
+
+    private static bool IsSfxGroup(AudioMixerGroup group)
+    {
+        return group != null && group.name.Equals("Sfx", StringComparison.OrdinalIgnoreCase);
     }
 }
