@@ -8,13 +8,29 @@ public class PlayerMoveController : MonoBehaviour
 
     [Header("Jump Settings")]
     [SerializeField] private float jumpForce = 7f;
-    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundCheckDistance = 0.15f;
+    [SerializeField] private float minGroundNormalY = 0.55f;
     [SerializeField] private float groundCheckRadius = 0.2f;
+    [SerializeField] private Transform groundCheckLeft;
+    [SerializeField] private Transform groundCheckCenter;
+    [SerializeField] private Transform groundCheckRight;
     [SerializeField] private LayerMask groundLayer;
 
     [Header("Jump Assist")]
     [SerializeField] private float coyoteTime = 0.12f;
     [SerializeField] private float jumpBufferTime = 0.12f;
+
+    [Header("Physics Materials")]
+    [SerializeField] private Collider2D bodyCollider;
+    [SerializeField] private PhysicsMaterial2D groundedMaterial;
+    [SerializeField] private PhysicsMaterial2D airborneMaterial;
+
+    [Header("Animation")]
+    [SerializeField] private Animator anim;
+
+    [Header("Sound")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip jumpAudioClip;
 
     [Header("Mobile UI")]
     [Tooltip("Ссылка на корневой объект мобильного UI (Canvas/Panel). Будет включаться/отключаться.")]
@@ -23,13 +39,8 @@ public class PlayerMoveController : MonoBehaviour
     [SerializeField] private bool autoEnableOnMobilePlatform = true;
     [SerializeField] private bool mobileMode = false;
 
-    [Header("Animation")]
-    [SerializeField] private Animator anim;
 
-    // это тут быть не должно, но времени уже нет :))0)
-    [Header("Sound")]
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip jumpAudioClip;
+
 
     private bool isGrounded;
     private bool wasGrounded;
@@ -106,6 +117,7 @@ public class PlayerMoveController : MonoBehaviour
 
         UpdateGroundedState();
         UpdateJumpTimers();
+        UpdatePhysicsMaterial();
         UpdateAnimatorParameters();
     }
 
@@ -116,6 +128,7 @@ public class PlayerMoveController : MonoBehaviour
             if (isClimbing)
             {
                 HandleClimbing(kbHorizontal, kbVertical);
+                HandleJumpFromClimb();
             }
             else
             {
@@ -129,15 +142,32 @@ public class PlayerMoveController : MonoBehaviour
 
     private void UpdateGroundedState()
     {
-        if (!groundCheck) return;
+        bool leftGrounded = IsGroundPointGrounded(groundCheckLeft);
+        bool centerGrounded = IsGroundPointGrounded(groundCheckCenter);
+        bool rightGrounded = IsGroundPointGrounded(groundCheckRight);
 
         wasGrounded = isGrounded;
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        isGrounded = leftGrounded || centerGrounded || rightGrounded;
+    }
+    private bool IsGroundPointGrounded(Transform checkPoint)
+    {
+        if (checkPoint == null) return false;
+
+        RaycastHit2D hit = Physics2D.Raycast(
+            checkPoint.position,
+            Vector2.down,
+            groundCheckDistance,
+            groundLayer
+        );
+
+        if (!hit.collider) return false;
+
+        return hit.normal.y >= minGroundNormalY;
     }
 
     private void UpdateJumpTimers()
     {
-        if (isGrounded)
+        if (isGrounded && !isClimbing)
             coyoteTimeCounter = coyoteTime;
         else
             coyoteTimeCounter -= Time.deltaTime;
@@ -148,6 +178,8 @@ public class PlayerMoveController : MonoBehaviour
 
     private void HandleMovement(float horizontalInput)
     {
+        rb.gravityScale = baseGravity;
+
         Vector2 movement = new Vector2(horizontalInput * speed, rb.linearVelocity.y);
         rb.linearVelocity = movement;
 
@@ -158,14 +190,42 @@ public class PlayerMoveController : MonoBehaviour
     private void HandleClimbing(float horizontalInput, float verticalInput)
     {
         rb.gravityScale = 0f;
-        rb.linearVelocity = new Vector2(horizontalInput * speed, verticalInput * climbSpeed);
+
+        float horizontalVelocity = horizontalInput * speed;
+        float verticalVelocity = verticalInput * climbSpeed;
+
+        rb.linearVelocity = new Vector2(horizontalVelocity, verticalVelocity);
     }
 
     private void HandleJump()
     {
         if (jumpBufferCounter > 0f && coyoteTimeCounter > 0f)
         {
-            audioSource.PlayOneShot(jumpAudioClip);
+            if (audioSource != null && jumpAudioClip != null)
+                audioSource.PlayOneShot(jumpAudioClip);
+
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+
+            if (anim != null)
+                anim.SetTrigger(JumpHash);
+
+            jumpBufferCounter = 0f;
+            coyoteTimeCounter = 0f;
+        }
+    }
+
+    private void HandleJumpFromClimb()
+    {
+        if (jumpBufferCounter > 0f)
+        {
+            isClimbing = false;
+            rb.gravityScale = baseGravity;
+
+            if (audioSource != null && jumpAudioClip != null)
+                audioSource.PlayOneShot(jumpAudioClip);
+
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
 
             if (anim != null)
@@ -198,6 +258,9 @@ public class PlayerMoveController : MonoBehaviour
     {
         isClimbing = value;
         rb.gravityScale = value ? 0f : baseGravity;
+
+        if (!value)
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y);
     }
 
     public void LockMove()
@@ -240,6 +303,15 @@ public class PlayerMoveController : MonoBehaviour
         jumpBufferCounter = 0f;
     }
 
+    private void UpdatePhysicsMaterial()
+    {
+        if (bodyCollider == null) return;
+
+        bool groundedNow = isGrounded && rb.linearVelocity.y <= 0.1f;
+
+        bodyCollider.sharedMaterial = groundedNow ? groundedMaterial : airborneMaterial;
+    }
+
     public void MobileLeftDown() { mLeftHeld = true; }
     public void MobileLeftUp() { mLeftHeld = false; }
     public void MobileRightDown() { mRightHeld = true; }
@@ -253,9 +325,17 @@ public class PlayerMoveController : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (!groundCheck) return;
-
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+
+        DrawGroundRay(groundCheckLeft);
+        DrawGroundRay(groundCheckCenter);
+        DrawGroundRay(groundCheckRight);
+    }
+
+    private void DrawGroundRay(Transform point)
+    {
+        if (point == null) return;
+
+        Gizmos.DrawLine(point.position, point.position + Vector3.down * groundCheckDistance);
     }
 }
