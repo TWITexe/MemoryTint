@@ -11,6 +11,10 @@ public class PlayerDeathController : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private BrushColorController brushColorController;
     [SerializeField] private UI.InGamePauseMenu pauseMenu;
+    private BrushSurfaceInteraction brushSurfaceInteraction;
+    private BackgroundRevealController backgroundRevealController;
+    private LevelIntroSequence levelIntroSequence;
+    
 
     [Header("UI сообщения")]
     [SerializeField] private CanvasGroup messageCanvasGroup;
@@ -45,6 +49,15 @@ public class PlayerDeathController : MonoBehaviour
     private bool isDying;
     private Coroutine deathRoutine;
 
+    private void Start()
+    {
+        if (brushColorController != null)
+            brushSurfaceInteraction = brushColorController.GetComponent<BrushSurfaceInteraction>();
+
+        // FindFirstObjectByType - практика не из лучших, но времени в обрез
+        levelIntroSequence = FindFirstObjectByType<LevelIntroSequence>();
+        backgroundRevealController = FindFirstObjectByType<BackgroundRevealController>();
+    }
     private void Update()
     {
         if (!CanRestartByKey())
@@ -145,6 +158,7 @@ public class PlayerDeathController : MonoBehaviour
             transform.position = respawnPoint.position;
 
         brushColorController?.ClearColor();
+        brushSurfaceInteraction?.ResetSurfaceContact();
         levelTimerController?.ResetTimer(true);
     }
 
@@ -188,6 +202,12 @@ public class PlayerDeathController : MonoBehaviour
             return false;
 
         if (pauseMenu != null && pauseMenu.IsPaused)
+            return false;
+
+        if (levelIntroSequence != null && levelIntroSequence.IsPlaying)
+            return false;
+
+        if (backgroundRevealController != null && backgroundRevealController.IsRevealing)
             return false;
 
         if (playerFadeController != null && playerFadeController.IsFading)

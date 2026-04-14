@@ -28,8 +28,12 @@ public class LevelIntroSequence : MonoBehaviour
     [SerializeField] private BackgroundRevealController backgroundRevealController;
     [SerializeField] private PlayerFadeController playerFadeController;
 
+    public bool IsPlaying { get; private set; }
+
     private void Awake()
     {
+        IsPlaying = true;
+
         if (FadeScreen.instance != null)
             FadeScreen.instance.SetAlpha(1f);
 
@@ -74,7 +78,6 @@ public class LevelIntroSequence : MonoBehaviour
         if (fade2 != null) yield return fade2;
 
         yield return new WaitForSeconds(delayBeforeSceneOpen);
-
         yield return new WaitForSeconds(delayBeforePlayerFade);
 
         if (playerFadeController != null)
@@ -82,6 +85,8 @@ public class LevelIntroSequence : MonoBehaviour
 
         if (FadeScreen.instance != null)
             FadeScreen.instance.FadeOut(screenFadeOutDuration);
+
+        IsPlaying = false;
     }
 
     private IEnumerator WaitForSkipInput()

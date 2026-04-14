@@ -40,6 +40,7 @@ public class LevelTransition : MonoBehaviour
     [Header("Sound Notification")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip colorCompleteAudioClip;
+    private bool hasPlayedColorCompleteSound;
 
     [Header("Timer")]
     [SerializeField] private LevelTimerController levelTimerController;
@@ -71,10 +72,10 @@ public class LevelTransition : MonoBehaviour
 
         if (isCorrectColor)
         {
-            if (colorCompleteAudioClip != null)
+            if (!hasPlayedColorCompleteSound && colorCompleteAudioClip != null && audioSource != null)
             {
                 audioSource.PlayOneShot(colorCompleteAudioClip);
-                colorCompleteAudioClip = null;
+                hasPlayedColorCompleteSound = true;
             }
 
             float pulse = 1f + Mathf.Sin(Time.time * pulseSpeed) * pulseScaleAmount;
@@ -82,6 +83,8 @@ public class LevelTransition : MonoBehaviour
         }
         else
         {
+            hasPlayedColorCompleteSound = false;
+
             pulseTarget.localScale = Vector3.Lerp(
                 pulseTarget.localScale,
                 baseScale,

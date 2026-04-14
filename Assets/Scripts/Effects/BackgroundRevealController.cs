@@ -17,6 +17,8 @@ public class BackgroundRevealController : MonoBehaviour
     private static readonly int RevealShapeMetaId = Shader.PropertyToID("_RevealShapeMeta");
     private static readonly int RevealVerticesId = Shader.PropertyToID("_RevealVertices");
 
+    public bool IsRevealing { get; private set; }
+
     [Header("Target")]
     [SerializeField]
     private Camera targetCamera;
@@ -49,8 +51,6 @@ public class BackgroundRevealController : MonoBehaviour
     [SerializeField]
     private float globalReveal = 0f;
     [SerializeField]
-    private bool playRevealOnLoad = false;
-    [SerializeField]
     private float revealDuration = 4f;
 
 
@@ -73,12 +73,6 @@ public class BackgroundRevealController : MonoBehaviour
         CollectRevealSources();
     }
 
-    private void Start()
-    {
-        if (playRevealOnLoad)
-            PlayFinalReveal(0, revealDuration);
-    }
-
     private void OnEnable()
     {
         ApplyReveal();
@@ -92,6 +86,7 @@ public class BackgroundRevealController : MonoBehaviour
     [ContextMenu("Play Final Reveal")]
     public void PlayFinalReveal(float _finishRevealValue, float _finalRevealDuration)
     {
+        IsRevealing = true;
         StopAllCoroutines();
         StartCoroutine(AnimateGlobalReveal(_finishRevealValue, _finalRevealDuration));
     }
@@ -103,6 +98,7 @@ public class BackgroundRevealController : MonoBehaviour
 
     private IEnumerator AnimateGlobalReveal(float targetValue, float duration)
     {
+        IsRevealing = true;
         duration = Mathf.Max(0.01f, duration);
         float startValue = globalReveal;
         float elapsed = 0f;

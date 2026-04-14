@@ -356,7 +356,7 @@ Transform:
   m_GameObject: {fileID: 8103003550165884593}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.03, y: 0.29, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -445,10 +445,12 @@ MonoBehaviour:
   speed: 1.5
   climbSpeed: 3
   jumpForce: 4.2
+  groundCheckDistance: 0.15
+  minGroundNormalY: 0.55
+  groundCheckRadius: 0.2
   groundCheckLeft: {fileID: 8443518006993316110}
   groundCheckCenter: {fileID: 7324357609381130016}
   groundCheckRight: {fileID: 3081435948654030611}
-  groundCheckRadius: 0.2
   groundLayer:
     serializedVersion: 2
     m_Bits: 8

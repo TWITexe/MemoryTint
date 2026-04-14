@@ -36,4 +36,8 @@ public class BrushSurfaceInteraction : MonoBehaviour
         brushColorController.ApplyColor(paintSurface.SurfaceColor);
         lastSurface = paintSurface;
     }
+    public void ResetSurfaceContact()
+    {
+        lastSurface = null;
+    }
 }
