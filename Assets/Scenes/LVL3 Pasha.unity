@@ -2324,7 +2324,6 @@ MonoBehaviour:
   pulseSpeed: 1.81
   pulseAmplitude: 1.17
   globalReveal: 0
-  playRevealOnLoad: 1
   revealDuration: 0.1
 --- !u!1 &993325933
 GameObject:
@@ -4154,7 +4153,7 @@ PrefabInstance:
       objectReference: {fileID: 946346893}
     - target: {fileID: 1215006586300866346, guid: b04bd97a443edaf4680cd1e1e5835602, type: 3}
       propertyPath: pulseScaleAmount
-      value: 0.15
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 1215006586300866346, guid: b04bd97a443edaf4680cd1e1e5835602, type: 3}
       propertyPath: playRevealBeforeLoad

@@ -2059,8 +2059,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 114488206}
     - target: {fileID: 2451915408257737804, guid: e5754dd66a0904b48925e2283443582c, type: 3}
+      propertyPath: speed
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2451915408257737804, guid: e5754dd66a0904b48925e2283443582c, type: 3}
       propertyPath: jumpForce
-      value: 4.6
+      value: 4.7
       objectReference: {fileID: 0}
     - target: {fileID: 3158197100197511876, guid: e5754dd66a0904b48925e2283443582c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2589,7 +2593,7 @@ Transform:
   m_GameObject: {fileID: 916595357}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: -0.01666704, w: 0.9998611}
-  m_LocalPosition: {x: -4.9, y: 0.3, z: -0.044431973}
+  m_LocalPosition: {x: -5.007, y: 0.238, z: -0.044431973}
   m_LocalScale: {x: 2, y: 2, z: 1.7785655}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2818,7 +2822,6 @@ MonoBehaviour:
   pulseSpeed: 1.81
   pulseAmplitude: 1.17
   globalReveal: 0
-  playRevealOnLoad: 1
   revealDuration: 0.1
 --- !u!1 &1006446454
 GameObject:
@@ -10514,8 +10517,11 @@ MonoBehaviour:
   finalClip1: {fileID: 0}
   finalClip2: {fileID: 0}
   extraDelayAfterFinalSounds: 0.2
+  finalImageGroup: {fileID: 0}
+  finalImageFadeDuration: 2
+  finalImageHoldDuration: 4
   pulseTarget: {fileID: 3856936072223894130}
-  pulseScaleAmount: 0.15
+  pulseScaleAmount: 0.45
   pulseSpeed: 3
   colorToleranceSqr: 0.01
   audioSource: {fileID: 4365784819317643950}
